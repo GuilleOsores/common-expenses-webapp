@@ -1,0 +1,40 @@
+<br><br>
+
+<mat-form-field>
+  <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+</mat-form-field>
+
+<table mat-table [dataSource]="buildings" class="mat-elevation-z8 table table-striped">
+
+  <ng-container matColumnDef="name">
+    <th mat-header-cell *matHeaderCellDef> Name </th>
+    <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="address">
+    <th mat-header-cell *matHeaderCellDef> Address </th>
+    <td mat-cell *matCellDef="let element"> {{element.address}} </td>
+  </ng-container>
+
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>
+     
+
+    
+
+  buildings work!
+  
+  <div class='container'>
+    <div class='row'>
+      <div class='col'>Name</div>
+      <div class='col'>Address</div>
+    </div>
+    <div *ngFor='let building of buildings ' class='row'>
+      <div class='col'>{{ building.name }} </div>
+      <div class='col'>{{ building.address }} </div>
+    </div>
+  </div>
+
+  <!--label *ngFor='let building of buildings '> {{ building.name }}</label-->
