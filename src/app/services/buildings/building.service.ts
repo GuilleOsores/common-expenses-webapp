@@ -16,4 +16,20 @@ export class BuildingService {
   getBuildings (){
     return this.httpClient.get(this.url);
   }
+
+  getBuildingById (id: any){
+    return this.httpClient.get(this.url + '/' + id);
+  }
+
+  newBuilding (building: any){
+    return this.httpClient.post(this.url, building);
+  }
+
+  updateBuilding (id: any, building: any){
+    return this.httpClient.put(this.url + '/' + id, building);
+  }
+
+  deleteBuilding (id: any){
+    return this.httpClient.get(this.url + '/' + id);
+  }
 }
