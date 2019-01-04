@@ -1,5 +1,6 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input, Output, Inject } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
 import { Mode } from '../../utils/utils'
 
@@ -11,36 +12,41 @@ import { BuildingService } from '../../services/buildings/building.service'
   styleUrls: ['./building-detail.component.css']
 })
 export class BuildingDetailComponent implements OnInit {
-  
-  @Input('mode') mode: Mode;
-  @Input('buildingId') buildingId: any;
+
   private formGroup: FormGroup;
   private formControlId: FormControl;
   private formControlName: FormControl;
   private formControlAddress: FormControl;
   private Mode = Mode;
+  private building: any;
 
-  building: any;
-
-  constructor(private buildingService: BuildingService) { }
+  constructor(
+    private buildingService: BuildingService,
+    public dialogRef: MatDialogRef<BuildingDetailComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any
+  ) { }
 
   ngOnInit() {
+    this.building = null;
     this.formGroup = new FormGroup({
-      id: this.formControlId = new FormControl( '' ),
+      buildingsId: this.formControlId = new FormControl( '' ),
       name: this.formControlName = new FormControl( '', Validators.required ),
       address: this.formControlAddress = new FormControl( '', Validators.required ),
-    });  
-    this.getBuildingById(this.buildingId)
-    .then( 
-      (building) => {
-        console.log('el edificio');
-        
-        console.log(JSON.stringify(building));
-        this.formControlId.setValue(building.buildingsId);
-        this.formControlName.setValue(building.name);
-        this.formControlAddress.setValue(building.address);
-      }
-    );
+    });
+
+    if( !((<Mode>this.data.mode) === Mode.insert)){
+      this.getBuildingById(this.data.building.buildingsId)
+      .then( 
+        (building) => {
+          console.log('el edificio');
+          
+          console.log(JSON.stringify(building));
+          this.formControlId.setValue(building.buildingsId);
+          this.formControlName.setValue(building.name);
+          this.formControlAddress.setValue(building.address);
+        }
+      );
+    }    
   }
 
   getBuildingById (id: any): Promise<any>{
@@ -62,9 +68,46 @@ export class BuildingDetailComponent implements OnInit {
     )    
   }
 
-  onSubmit(){
-    if(this.formGroup.valid)
+  onSubmit (){
+    if(this.formGroup.valid){
+      switch(this.data.mode){
+        case Mode.insert:
+          this.newBuilding();
+          break;
+        case Mode.update:
+          this.updateBuilding();
+          break;
+        case Mode.delete:
+          this.deleteBuilding();
+          break;
+      }
       console.log(JSON.stringify(this.formGroup.value));
+      this.building = this.formGroup.value;
+      this.dialogRef.close(this.building);
+    }
   }
 
+  newBuilding(){
+    this.buildingService.newBuilding(this.formGroup.value)
+    .subscribe(
+      value => console.log,
+      error => console.log,
+    );
+  }
+
+  updateBuilding(){
+    this.buildingService.updateBuilding(this.formGroup.value)
+    .subscribe(
+      value => console.log,
+      error => console.log,
+    );
+  }
+
+  deleteBuilding(){
+    this.buildingService.deleteBuilding(this.formGroup.value.buildingsId)
+    .subscribe(
+      value => console.log,
+      error => console.log,
+    );
+  }
 }

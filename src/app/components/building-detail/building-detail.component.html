@@ -1,26 +1,24 @@
 <form id="formBuildingDetail" [formGroup]="formGroup" (ngSubmit)="onSubmit()">
   <div class="continer">
-      <div class="row">
-          <mat-form-field>
-            <input matInput *ngIf="mode !== Mode.insert" type="text" formControlName="id" placeholder="Id" [readonly]="true">
-          </mat-form-field>
-        </div>
     <div class="row">
-  <mat-form-field>
-    <input matInput type="text" formControlName="name" placeholder="Name" [readonly]="mode === Mode.view || mode === Mode.delete">
-  </mat-form-field>
-</div>
-<div class="row">
-  <mat-form-field>
-    <input matInput type="text" formControlName="address" placeholder="Address" [readonly]="mode === Mode.view || mode === Mode.delete">
-  </mat-form-field>
-</div>
-  <button mat-raised-button *ngIf="mode === Mode.insert || mode === Mode.update" color="primary" type="submit" value="Submit">Submit</button>
-  <button mat-raised-button *ngIf="mode === Mode.delete" color="primary" type="submit" value="Submit">Delete</button>
-  <button mat-raised-button *ngIf="mode === Mode.view" color="primary" type="submit" value="Submit">Back</button>
-</div>
+      <mat-form-field>
+        <input matInput *ngIf="data.mode !== Mode.insert" type="text" formControlName="buildingsId" placeholder="Id" [readonly]="true">
+      </mat-form-field>
+    </div>
+    <div class="row">
+      <mat-form-field>
+        <input matInput type="text" formControlName="name" placeholder="Name" [readonly]="data.mode === Mode.view || data.mode === Mode.delete">
+      </mat-form-field>
+    </div>
+    <div class="row">
+      <mat-form-field>
+        <input matInput type="text" formControlName="address" placeholder="Address" [readonly]="data.mode === Mode.view || data.mode === Mode.delete">
+      </mat-form-field>
+    </div>
+    <button mat-raised-button *ngIf="data.mode === Mode.insert || data.mode === Mode.update" color="primary" type="submit" value="Submit">Submit</button>
+    <button mat-raised-button *ngIf="data.mode === Mode.delete" color="primary" type="submit" value="Submit">Delete</button>
+    <button mat-raised-button *ngIf="data.mode === Mode.view" color="primary" type="submit" value="Submit">Back</button>
+  </div>
 </form>
 
-{{ building.name }}
-{{ building.address }}
-
+{{ data.building }}

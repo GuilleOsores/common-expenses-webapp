@@ -25,8 +25,8 @@ export class BuildingService {
     return this.httpClient.post(this.url, building);
   }
 
-  updateBuilding (id: any, building: any){
-    return this.httpClient.put(this.url + '/' + id, building);
+  updateBuilding (building: any){
+    return this.httpClient.put(this.url + '/' + building.buildingsId, building);
   }
 
   deleteBuilding (id: any){

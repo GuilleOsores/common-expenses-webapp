@@ -5,10 +5,13 @@ import { HttpClientModule } from '@angular/common/http';
 
 import { MaterialModule } from './material.module';
 
+import { AppRoutingModule } from './app-routing.module';
+
 import { AppComponent } from './app.component';
 import { BuildingsComponent } from './components/buildings/buildings.component';
 import { ApartmentsComponent } from './components/apartments/apartments.component';
 import { BuildingDetailComponent } from './components/building-detail/building-detail.component';
+import { SidenavComponent } from './components/sidenav/sidenav.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
@@ -17,17 +20,18 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     BuildingsComponent,
     ApartmentsComponent,
     BuildingDetailComponent,
+    SidenavComponent,
   ],
   imports: [
     BrowserModule,
     HttpClientModule,
     ReactiveFormsModule,
     MaterialModule,
-    BrowserAnimationsModule
-    //MatFormFieldModule,
-    //MatInputModule
+    BrowserAnimationsModule,
+    AppRoutingModule
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents: [BuildingDetailComponent]
 })
 export class AppModule { }

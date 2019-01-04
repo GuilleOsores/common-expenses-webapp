@@ -1,4 +1,19 @@
-<app-buildings></app-buildings>
+<div class="container">
+  <div class="row">
+    <div class="col">
+        <button mat-icon-button (click)="sidenav.toggle()">
+            <mat-icon>menu</mat-icon>
+        </button>        
+    </div>
+    <div class="col">
+      <router-outlet></router-outlet>      
+    </div>
+  </div>
+</div>
+<mat-sidenav #sidenav role="navigation">
+  <app-sidenav (sidenavClose)="sidenav.close()"></app-sidenav>
+</mat-sidenav>
+
 
 
 
@@ -34,3 +49,4 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 
 -->
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
