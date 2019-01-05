@@ -10,7 +10,8 @@ import {
   MatTableModule,
   MatSidenavModule,
   MatFormFieldModule,
-  MatDialogModule
+  MatDialogModule,
+  MatTooltipModule
 } from '@angular/material';
 
 @NgModule({
@@ -26,7 +27,8 @@ import {
     MatListModule,
     MatIconModule,
     MatButtonModule,
-    MatDialogModule
+    MatDialogModule,
+    MatTooltipModule
   ],
   exports: [
     BrowserAnimationsModule,
@@ -37,7 +39,8 @@ import {
     MatSidenavModule,
     MatListModule,
     MatIconModule,
-    MatDialogModule
+    MatDialogModule,
+    MatTooltipModule
   ],
   providers: [],
   bootstrap: []

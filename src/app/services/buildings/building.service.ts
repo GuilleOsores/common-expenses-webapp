@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
+import { environment } from '../../../environments/environment'
+
 //import { Building } from '../../../../../common-expenses-libs/libs';
 
 @Injectable({
@@ -8,11 +10,11 @@ import { HttpClient } from '@angular/common/http';
 })
 export class BuildingService {
   
-  private url = 'http://127.0.0.1:8080/buildings';
+  private url = environment.api.buildings;
 
   constructor (private httpClient: HttpClient) {
   }
-//<Building[]>
+
   getBuildings (){
     return this.httpClient.get(this.url);
   }
@@ -30,6 +32,6 @@ export class BuildingService {
   }
 
   deleteBuilding (id: any){
-    return this.httpClient.get(this.url + '/' + id);
+    return this.httpClient.delete(this.url + '/' + id);
   }
 }

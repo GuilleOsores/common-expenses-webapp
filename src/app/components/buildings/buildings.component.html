@@ -4,19 +4,55 @@
 
 <table id="tableBuildings" mat-table [dataSource]="buildings" class="mat-elevation-z8 table table-striped">
 
-  <ng-container matColumnDef="id">
-    <td mat-cell *matCellDef="let element" (click)="editBuilding(element)">
-      <i class="material-icons" >
-        edit
-      </i>
+  <ng-container matColumnDef="launch">
+    <th mat-header-cell *matHeaderCellDef></th>
+    <td mat-cell *matCellDef="let element" (click)="viewApartments(element.buildingsId)" matTooltip="Open building">
+      <button mat-button>
+        <i class="material-icons">
+          launch
+        </i>
+      </button>
     </td>
   </ng-container>
 
-  <ng-container matColumnDef="id">
+  <ng-container matColumnDef="view">
+    <th mat-header-cell *matHeaderCellDef></th>
+    <td mat-cell *matCellDef="let element" (click)="viewBuilding(element)" matTooltip="View building">
+      <button mat-button>
+        <i class="material-icons" >
+          search
+        </i>
+      </button>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="edit">
+    <th mat-header-cell *matHeaderCellDef></th>
+    <td mat-cell *matCellDef="let element" (click)="editBuilding(element)" matTooltip="Edit building">
+      <button mat-button>
+        <i class="material-icons" >
+          edit
+        </i>
+      </button>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="delete">
+    <th mat-header-cell *matHeaderCellDef></th>
+    <td mat-cell *matCellDef="let element" (click)="deleteBuilding(element)" matTooltip="Delete building">
+      <button mat-button>
+        <i class="material-icons" >
+          delete
+        </i>
+      </button>
+    </td>
+  </ng-container>
+<!--
+  <ng-container matColumnDef="buildingsId">
     <th mat-header-cell *matHeaderCellDef> Id </th>
     <td mat-cell *matCellDef="let element" (click)="show(element.buildingsId)"> {{element.buildingsId}} </td>
   </ng-container>
-
+-->
   <ng-container matColumnDef="name">
     <th mat-header-cell *matHeaderCellDef> Name </th>
     <td mat-cell *matCellDef="let element"> {{element.name}} </td>
@@ -27,10 +63,10 @@
     <td mat-cell *matCellDef="let element"> {{element.address}} </td>
   </ng-container>
 
-  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
   <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 </table>
-<button mat-fab color="primary" (click)="createBuilding()">
+<button mat-fab color="primary" (click)="createBuilding()" matTooltip="New building">
   <span style="font-size: 48px">+</span>
 </button>
 

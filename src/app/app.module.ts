@@ -13,6 +13,7 @@ import { ApartmentsComponent } from './components/apartments/apartments.componen
 import { BuildingDetailComponent } from './components/building-detail/building-detail.component';
 import { SidenavComponent } from './components/sidenav/sidenav.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ApartmentDetailComponent } from './src/app/components/apartment-detail/apartment-detail.component';
 
 @NgModule({
   declarations: [
@@ -21,6 +22,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     ApartmentsComponent,
     BuildingDetailComponent,
     SidenavComponent,
+    ApartmentDetailComponent,
   ],
   imports: [
     BrowserModule,

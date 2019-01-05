@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
 import { MatTableDataSource } from '@angular/material';
 import { MatDialog } from '@angular/material';
 
@@ -19,10 +20,14 @@ export class BuildingsComponent implements OnInit {
   buildings: MatTableDataSource<Building>;
   selectedBuilding: any;
   
-  displayedColumns: string[] = ['id', 'name', 'address'];
+  displayedColumns: string[] = ['launch', 'view', 'edit', 'delete', 'name', 'address'];
 
-  constructor (private buildingService: BuildingService, private matDialog: MatDialog) {
-  }
+  constructor (
+    private buildingService: BuildingService,
+    private matDialog: MatDialog,
+    private router: Router,
+    private route: ActivatedRoute,
+  ) {  }
 
   ngOnInit () {
     this.getBuildings();
@@ -63,12 +68,13 @@ export class BuildingsComponent implements OnInit {
     )
   }
 
-  editBuilding (){
+  editBuilding (building){
     const dialogRef = this.matDialog.open(
       BuildingDetailComponent,
       {
         data: {
-          mode: Mode.update
+          mode: Mode.update,
+          building: building
         }
       }
     );
@@ -84,12 +90,53 @@ export class BuildingsComponent implements OnInit {
     )
   }
 
-  show (id){
-    console.log(id);
-    this.selectedBuilding = id;
-    //this.mode = Mode.view;
-    //this.mode = Mode.update;
-    this.mode = Mode.delete;
+  deleteBuilding (building){
+    const dialogRef = this.matDialog.open(
+      BuildingDetailComponent,
+      {
+        data: {
+          mode: Mode.delete,
+          building: building
+        }
+      }
+    );
+    dialogRef.afterClosed().subscribe(
+      (building) => {
+        console.log('el dialog devolvio:::::');
+        console.log(JSON.stringify(building));
+        /*
+        this.buildings.data.push(building);
+        this.buildings.filter = this.buildings.filter;
+        */
+      }
+    )
   }
 
+  viewBuilding (building){
+    const dialogRef = this.matDialog.open(
+      BuildingDetailComponent,
+      {
+        data: {
+          mode: Mode.view,
+          building: building
+        }
+      }
+    );
+    dialogRef.afterClosed().subscribe(
+      (building) => {
+        console.log('el dialog devolvio:::::');
+        console.log(JSON.stringify(building));
+        /*
+        this.buildings.data.push(building);
+        this.buildings.filter = this.buildings.filter;
+        */
+      }
+    )
+  }
+
+  viewApartments (buildingId: string){
+    this.router.navigate([buildingId, 'apartments'], { relativeTo: this.route })
+    .then(console.log)
+    .catch(console.log);
+  }
 }
