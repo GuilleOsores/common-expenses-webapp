@@ -6,7 +6,7 @@ import { MatDialog } from '@angular/material';
 import { Mode } from '../../utils/utils'
 
 import { BuildingService } from '../../services/buildings/building.service';
-import { Building } from '../../../../../common-expenses-libs/libs';
+import { Building } from '../../classes';
 import { BuildingDetailComponent } from '../building-detail/building-detail.component'
 
 @Component({
@@ -37,16 +37,15 @@ export class BuildingsComponent implements OnInit {
     this.buildings.filter = filter;
   }
 
-  getBuildings (){
-    this.buildingService.getBuildings()
+  getBuildings = () => {
+    this.buildingService.getBuildings$()
     .subscribe(
-      (buildings: any) => { console.log(JSON.stringify(buildings.Items)); this.buildings = new MatTableDataSource(<Building[]>buildings.Items);},
-      //(buildings: any) => { console.log(JSON.stringify(buildings.Items)); this.buildings = <Building[]>buildings.Items },
-      error => {console.log('errior::::');  console.log(error); }
+      (buildings) => { this.buildings = new MatTableDataSource(buildings); },
+      error => {console.log('error::::');  console.log(error); }
     )
   }
 
-  createBuilding (){
+  createBuilding = () => {
     const dialogRef = this.matDialog.open(
       BuildingDetailComponent,
       {
@@ -57,18 +56,18 @@ export class BuildingsComponent implements OnInit {
     );
 
     dialogRef.afterClosed().subscribe(
+      this.getBuildings
+      /*
       (building) => {
-        console.log('el dialog devolvio:::::');
+        console.log('el dialog devolvio::::');
         console.log(JSON.stringify(building));
-        /*
         this.buildings.data.push(building);
         this.buildings.filter = this.buildings.filter;
-        */
-      }
+      }*/
     )
   }
 
-  editBuilding (building){
+  editBuilding = (building) => {
     const dialogRef = this.matDialog.open(
       BuildingDetailComponent,
       {
@@ -79,18 +78,18 @@ export class BuildingsComponent implements OnInit {
       }
     );
     dialogRef.afterClosed().subscribe(
-      (building) => {
-        console.log('el dialog devolvio:::::');
+      this.getBuildings
+      /*
+      (building: Building) => {
+        console.log('el dialog devolvio::::');
         console.log(JSON.stringify(building));
-        /*
         this.buildings.data.push(building);
         this.buildings.filter = this.buildings.filter;
-        */
-      }
+      }*/
     )
   }
 
-  deleteBuilding (building){
+  deleteBuilding = (building) => {
     const dialogRef = this.matDialog.open(
       BuildingDetailComponent,
       {
@@ -101,18 +100,18 @@ export class BuildingsComponent implements OnInit {
       }
     );
     dialogRef.afterClosed().subscribe(
+      this.getBuildings
+      /*
       (building) => {
         console.log('el dialog devolvio:::::');
-        console.log(JSON.stringify(building));
-        /*
+        console.log(JSON.stringify(building));        
         this.buildings.data.push(building);
         this.buildings.filter = this.buildings.filter;
-        */
-      }
+      }*/
     )
   }
 
-  viewBuilding (building){
+  viewBuilding = (building) => {
     const dialogRef = this.matDialog.open(
       BuildingDetailComponent,
       {
@@ -122,16 +121,6 @@ export class BuildingsComponent implements OnInit {
         }
       }
     );
-    dialogRef.afterClosed().subscribe(
-      (building) => {
-        console.log('el dialog devolvio:::::');
-        console.log(JSON.stringify(building));
-        /*
-        this.buildings.data.push(building);
-        this.buildings.filter = this.buildings.filter;
-        */
-      }
-    )
   }
 
   viewApartments (buildingId: string){

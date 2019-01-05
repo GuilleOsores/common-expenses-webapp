@@ -13,7 +13,7 @@ import { ApartmentsComponent } from './components/apartments/apartments.componen
 import { BuildingDetailComponent } from './components/building-detail/building-detail.component';
 import { SidenavComponent } from './components/sidenav/sidenav.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { ApartmentDetailComponent } from './src/app/components/apartment-detail/apartment-detail.component';
+import { ApartmentDetailComponent } from './components/apartment-detail/apartment-detail.component';
 
 @NgModule({
   declarations: [
@@ -34,6 +34,9 @@ import { ApartmentDetailComponent } from './src/app/components/apartment-detail/
   ],
   providers: [],
   bootstrap: [AppComponent],
-  entryComponents: [BuildingDetailComponent]
+  entryComponents: [
+    BuildingDetailComponent,
+    ApartmentDetailComponent
+  ]
 })
 export class AppModule { }

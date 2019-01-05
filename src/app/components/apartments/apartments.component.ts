@@ -1,10 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { map } from 'rxjs/operators';
 import { MatTableDataSource } from '@angular/material';
 import { MatDialog } from '@angular/material';
 
 import { Mode } from '../../utils/utils'
 
+import { Apartment, Building} from '../../classes';
 import { BuildingService } from '../../services/buildings/building.service';
 import { ApartmentsService } from '../../services/apartments/apartments.service';
 import { ApartmentDetailComponent } from '../apartment-detail/apartment-detail.component'
@@ -18,10 +20,11 @@ import { ApartmentDetailComponent } from '../apartment-detail/apartment-detail.c
 export class ApartmentsComponent implements OnInit {
 
   private buildingId: string;
-  private buildingName: string;
+  private building: Building;
+  //private buildingName: string;
   private mode: Mode;  
-  apartments: MatTableDataSource<any>;
-  selectedBuilding: any;
+  private apartments: MatTableDataSource<Apartment>;
+  private selectedBuilding: any;
   
   displayedColumns: string[] = ['view', 'edit', 'delete', 'apartmentsId'];
 
@@ -40,117 +43,129 @@ export class ApartmentsComponent implements OnInit {
   }
 
   ngOnInit () {
-    this.getBuilding();
-    this.getApartments();
+    this.getBuilding()
+    .then(
+      building => {
+        this.building = building;
+        this.getApartments();
+      }
+    )
+    .catch(console.log);
   }
 
   applyFilter (filter: string){
     this.apartments.filter = filter;
   }
 
-  getBuilding (){
-    this.buildingService.getBuildingById(this.buildingId)
+  getBuilding = () => {
+    return new Promise<Building>(
+      (resolve, reject) => {
+        this.buildingService.getBuildingById$(this.buildingId).pipe()
+        .subscribe(
+          resolve,
+          reject
+        )
+      }
+    )    
+  }
+
+  getApartments = () => {
+    this.apartmentsService.getApartments$(this.building.buildingsId)
     .subscribe(
-      (buildings: any) => { console.log(JSON.stringify(buildings.Items)); this.buildingName = buildings.Items[0].name},
-      //(buildings: any) => { console.log(JSON.stringify(buildings.Items)); this.buildings = <Building[]>buildings.Items },
-      error => {console.log('errior::::');  console.log(error); }
+      (apartments) => { this.apartments = new MatTableDataSource(apartments);},
+      error => {console.log('error::::');  console.log(error); }
     )
   }
 
-  getApartments (){
-    this.apartmentsService.getApartments(this.buildingId)
-    .subscribe(
-      (buildings: any) => { console.log(JSON.stringify(buildings.Items)); this.apartments = new MatTableDataSource(<any[]>buildings.Items);},
-      //(buildings: any) => { console.log(JSON.stringify(buildings.Items)); this.buildings = <Building[]>buildings.Items },
-      error => {console.log('errior::::');  console.log(error); }
-    )
-  }
-
-  createApartment (){
+  createApartment = () => {
     const dialogRef = this.matDialog.open(
       ApartmentDetailComponent,
       {
         data: {
-          mode: Mode.insert
+          mode: Mode.insert,
+          building: this.building
         }
       }
     );
 
     dialogRef.afterClosed().subscribe(
+      this.getApartments,
+      /*
       (apartment) => {
-        console.log('el dialog devolvio:::::');
+        console.log('el dialog devolvio::::');
         console.log(JSON.stringify(apartment));
-        /*
         this.buildings.data.push(building);
         this.buildings.filter = this.buildings.filter;
-        */
-      }
+      }*/
     )
   }
 
-  editApartment (apartment){
+  editApartment = (apartment) => {
     const dialogRef = this.matDialog.open(
       ApartmentDetailComponent,
       {
         data: {
           mode: Mode.update,
+          building: this.building,
           apartment: apartment
         }
       }
     );
     dialogRef.afterClosed().subscribe(
+      this.getApartments,
+      /*
       (apartment) => {
-        console.log('el dialog devolvio:::::');
+        console.log('el dialog devolvio::::');
         console.log(JSON.stringify(apartment));
-        /*
         this.buildings.data.push(building);
         this.buildings.filter = this.buildings.filter;
-        */
-      }
+      }*/
     )
   }
 
-  deleteApartment (apartment){
+  deleteApartment = (apartment) => {
     const dialogRef = this.matDialog.open(
       ApartmentDetailComponent,
       {
         data: {
           mode: Mode.delete,
+          building: this.building,
           apartment: apartment
         }
       }
     );
     dialogRef.afterClosed().subscribe(
+      this.getApartments,
+      /*
       (apartment) => {
-        console.log('el dialog devolvio:::::');
+        console.log('el dialog devolvio::::');
         console.log(JSON.stringify(apartment));
-        /*
         this.buildings.data.push(building);
         this.buildings.filter = this.buildings.filter;
-        */
-      }
+      }*/
     )
   }
 
-  viewApartment (apartment){
+  viewApartment = (apartment) => {
     const dialogRef = this.matDialog.open(
       ApartmentDetailComponent,
       {
         data: {
           mode: Mode.view,
+          building: this.building,
           apartment: apartment
         }
       }
     );
     dialogRef.afterClosed().subscribe(
+      this.getApartments,
+      /*
       (apartment) => {
-        console.log('el dialog devolvio:::::');
+        console.log('el dialog devolvio::::');
         console.log(JSON.stringify(apartment));
-        /*
         this.buildings.data.push(building);
         this.buildings.filter = this.buildings.filter;
-        */
-      }
+      }*/
     )
   }
 

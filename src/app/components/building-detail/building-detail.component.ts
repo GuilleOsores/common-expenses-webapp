@@ -4,6 +4,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
 import { Mode } from '../../utils/utils'
 
+import { Building } from '../../classes';
 import { BuildingService } from '../../services/buildings/building.service'
 
 @Component({
@@ -18,7 +19,6 @@ export class BuildingDetailComponent implements OnInit {
   private formControlName: FormControl;
   private formControlAddress: FormControl;
   private Mode = Mode;
-  private building: any;
 
   constructor(
     private buildingService: BuildingService,
@@ -27,7 +27,6 @@ export class BuildingDetailComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.building = null;
     this.formGroup = new FormGroup({
       buildingsId: this.formControlId = new FormControl( '' ),
       name: this.formControlName = new FormControl( '', Validators.required ),
@@ -49,15 +48,16 @@ export class BuildingDetailComponent implements OnInit {
     }    
   }
 
-  getBuildingById (id: any): Promise<any>{
+  getBuildingById = (id: any): Promise<any> => {
     return new Promise(
       (resolve, reject) => {
-        this.buildingService.getBuildingById(id)
+        this.buildingService.getBuildingById$(id)
         .subscribe(
-          (value: any) => {
-            if(value.Items[0])
-              this.building = value.Items[0];
-              resolve(this.building);
+          (building) => {
+            if(building)
+              resolve(building);
+            else
+              reject('Building not found');
           },
           error => {
             console.log(error);
@@ -68,46 +68,62 @@ export class BuildingDetailComponent implements OnInit {
     )    
   }
 
-  onSubmit (){
+  onSubmit () {
     if(this.formGroup.valid){
       switch(this.data.mode){
         case Mode.insert:
-          this.newBuilding();
+          this.newBuilding().then(this.closeDialog);
           break;
         case Mode.update:
-          this.updateBuilding();
+          this.updateBuilding().then(this.closeDialog);
           break;
         case Mode.delete:
-          this.deleteBuilding();
+          this.deleteBuilding().then(this.closeDialog);
+          break;
+        case Mode.view:
+          this.dialogRef.close();
           break;
       }
-      console.log(JSON.stringify(this.formGroup.value));
-      this.building = this.formGroup.value;
-      this.dialogRef.close(this.building);
     }
   }
 
-  newBuilding(){
-    this.buildingService.newBuilding(this.formGroup.value)
-    .subscribe(
-      value => console.log,
-      error => console.log,
-    );
+  closeDialog = () => {
+    this.dialogRef.close(this.formGroup.value);
   }
 
-  updateBuilding(){
-    this.buildingService.updateBuilding(this.formGroup.value)
-    .subscribe(
-      value => console.log,
-      error => console.log,
-    );
+  newBuilding (): Promise<Building> {
+    return new Promise(
+      (resolve, reject) => {
+        this.buildingService.newBuilding$(this.formGroup.value)
+        .subscribe(
+          resolve,
+          reject
+        );
+      }
+    )
   }
 
-  deleteBuilding(){
-    this.buildingService.deleteBuilding(this.formGroup.value.buildingsId)
-    .subscribe(
-      value => console.log,
-      error => console.log,
-    );
+  updateBuilding (): Promise<Building> {
+    return new Promise(
+      (resolve, reject) => {
+        this.buildingService.updateBuilding$(this.formGroup.value)
+        .subscribe(
+          resolve,
+          reject
+        );
+      }
+    )
+  }
+
+  deleteBuilding (): Promise<Building> {
+    return new Promise(
+      (resolve, reject) => {
+        this.buildingService.deleteBuilding$(this.formGroup.value.buildingsId)
+        .subscribe(
+          resolve,
+          reject
+        );
+      }
+    )
   }
 }

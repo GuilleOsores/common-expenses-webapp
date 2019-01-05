@@ -11,7 +11,8 @@ import {
   MatSidenavModule,
   MatFormFieldModule,
   MatDialogModule,
-  MatTooltipModule
+  MatTooltipModule,
+  MatCardModule
 } from '@angular/material';
 
 @NgModule({
@@ -28,7 +29,8 @@ import {
     MatIconModule,
     MatButtonModule,
     MatDialogModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatCardModule
   ],
   exports: [
     BrowserAnimationsModule,
@@ -40,7 +42,8 @@ import {
     MatListModule,
     MatIconModule,
     MatDialogModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatCardModule
   ],
   providers: [],
   bootstrap: []

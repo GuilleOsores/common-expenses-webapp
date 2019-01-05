@@ -1,7 +1,8 @@
+<mat-card-title>Building</mat-card-title>
 <form id="formBuildingDetail" [formGroup]="formGroup" (ngSubmit)="onSubmit()">
   <div class="continer">
     <div class="row">
-      <mat-form-field>
+      <mat-form-field *ngIf="data.mode !== Mode.insert">
         <input matInput *ngIf="data.mode !== Mode.insert" type="text" formControlName="buildingsId" placeholder="Id" [readonly]="true">
       </mat-form-field>
     </div>
@@ -20,5 +21,3 @@
     <button mat-raised-button *ngIf="data.mode === Mode.view" color="primary" type="submit" value="Submit">Back</button>
   </div>
 </form>
-
-{{ data.building }}

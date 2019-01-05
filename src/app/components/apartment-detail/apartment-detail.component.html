@@ -1,3 +1,25 @@
-<p>
-  apartment-detail works!
-</p>
+<mat-card-title>Apartment</mat-card-title>
+<form id="formApartmentDetail" [formGroup]="formGroup" (ngSubmit)="onSubmit()">
+  <div class="continer">
+    <div class="row">
+      <mat-form-field>
+        <input matInput type="text" formControlName="apartmentsId" placeholder="Id" [readonly]="data.mode === Mode.view || data.mode === Mode.delete">
+      </mat-form-field>
+    </div>
+    <!--
+    <div class="row">
+      <mat-form-field>
+        <input matInput type="text" formControlName="name" placeholder="Name" [readonly]="data.mode === Mode.view || data.mode === Mode.delete">
+      </mat-form-field>
+    </div>
+    <div class="row">
+      <mat-form-field>
+        <input matInput type="text" formControlName="address" placeholder="Address" [readonly]="data.mode === Mode.view || data.mode === Mode.delete">
+      </mat-form-field>
+    </div>
+    -->
+    <button mat-raised-button *ngIf="data.mode === Mode.insert || data.mode === Mode.update" color="primary" type="submit" value="Submit">Submit</button>
+    <button mat-raised-button *ngIf="data.mode === Mode.delete" color="primary" type="submit" value="Submit">Delete</button>
+    <button mat-raised-button *ngIf="data.mode === Mode.view" color="primary" type="submit" value="Submit">Back</button>
+  </div>
+</form>

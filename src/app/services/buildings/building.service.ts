@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { map } from 'rxjs/operators';
 
 import { environment } from '../../../environments/environment'
 
-//import { Building } from '../../../../../common-expenses-libs/libs';
+import { Building } from '../../classes';
 
 @Injectable({
   providedIn: 'root'
@@ -15,23 +16,35 @@ export class BuildingService {
   constructor (private httpClient: HttpClient) {
   }
 
-  getBuildings (){
-    return this.httpClient.get(this.url);
+  getBuildings$ (){
+    return this.httpClient.get<any>(this.url)
+    .pipe(
+      map( res => <Building[]>res.Items)
+    );
   }
 
-  getBuildingById (id: any){
-    return this.httpClient.get(this.url + '/' + id);
+  getBuildingById$ (id: string){
+    return this.httpClient.get<any>(this.url + '/' + id)
+    .pipe(
+      map( res => <Building>res.Items[0])
+    );
   }
 
-  newBuilding (building: any){
-    return this.httpClient.post(this.url, building);
+  newBuilding$ (building: Building){
+    return this.httpClient.post<any>(this.url, building)
+    .pipe(
+      map( res => <Building>res.Attributes)
+    );
   }
 
-  updateBuilding (building: any){
-    return this.httpClient.put(this.url + '/' + building.buildingsId, building);
+  updateBuilding$ = (building: Building) => {
+    return this.httpClient.put<any>(this.url + '/' + building.buildingsId, building)
+    .pipe(
+      map( res => <Building>res.Attributes)
+    );
   }
 
-  deleteBuilding (id: any){
-    return this.httpClient.delete(this.url + '/' + id);
+  deleteBuilding$ (id: string){
+    return this.httpClient.delete<Building>(this.url + '/' + id);
   }
 }
