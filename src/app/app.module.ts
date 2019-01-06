@@ -2,18 +2,23 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { MaterialModule } from './material.module';
-
 import { AppRoutingModule } from './app-routing.module';
 
 import { AppComponent } from './app.component';
-import { BuildingsComponent } from './components/buildings/buildings.component';
-import { ApartmentsComponent } from './components/apartments/apartments.component';
-import { BuildingDetailComponent } from './components/building-detail/building-detail.component';
-import { SidenavComponent } from './components/sidenav/sidenav.component';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { ApartmentDetailComponent } from './components/apartment-detail/apartment-detail.component';
+import {
+  ApartmentDetailComponent,
+  ApartmentsComponent,
+  BuildingDetailComponent,
+  BuildingsComponent,
+  InvoicesComponent,
+  InvoicesDetailComponent,
+  ServicesComponent,
+  ServicesDetailComponent,
+  SidenavComponent,
+} from './components';
 
 @NgModule({
   declarations: [
@@ -23,6 +28,10 @@ import { ApartmentDetailComponent } from './components/apartment-detail/apartmen
     BuildingDetailComponent,
     SidenavComponent,
     ApartmentDetailComponent,
+    InvoicesComponent,
+    InvoicesDetailComponent,
+    ServicesDetailComponent,
+    ServicesComponent,
   ],
   imports: [
     BrowserModule,
@@ -36,7 +45,9 @@ import { ApartmentDetailComponent } from './components/apartment-detail/apartmen
   bootstrap: [AppComponent],
   entryComponents: [
     BuildingDetailComponent,
-    ApartmentDetailComponent
+    ApartmentDetailComponent,
+    ServicesDetailComponent,
+    InvoicesDetailComponent
   ]
 })
 export class AppModule { }

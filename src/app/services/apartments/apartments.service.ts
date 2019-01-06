@@ -15,11 +15,11 @@ export class ApartmentsService {
 
   constructor(private httpClient: HttpClient) { }
 
-  setBuidingId (buildingId: string){
+  setBuidingId (buildingId: string) {
     this.url = this.url.replace(':buildingId', buildingId);
   }
 
-  getApartments$ (buildingId: string){
+  getApartments$ (buildingId: string) {
     this.setBuidingId(buildingId);
     return this.httpClient.get<any>(this.url)
     .pipe(
@@ -27,7 +27,7 @@ export class ApartmentsService {
     );
   }
 
-  getApartmentById$ (buildingId: string, apartmentId: string){
+  getApartmentById$ (buildingId: string, apartmentId: string) {
     this.setBuidingId(buildingId);
     return this.httpClient.get<any>(this.url + '/' + apartmentId)
     .pipe(

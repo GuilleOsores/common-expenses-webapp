@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import {
   MatInputModule,
@@ -20,7 +19,6 @@ import {
   ],
   imports: [
     CommonModule,
-    BrowserAnimationsModule,
     MatFormFieldModule,
     MatInputModule,
     MatTableModule,
@@ -33,7 +31,6 @@ import {
     MatCardModule
   ],
   exports: [
-    BrowserAnimationsModule,
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,

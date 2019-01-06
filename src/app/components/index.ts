@@ -1,0 +1,9 @@
+export { ApartmentDetailComponent } from './apartment-detail/apartment-detail.component';
+export { ApartmentsComponent } from './apartments/apartments.component';
+export { BuildingDetailComponent } from './building-detail/building-detail.component';
+export { BuildingsComponent } from './buildings/buildings.component';
+export { InvoicesComponent } from './invoices/invoices.component';
+export { InvoicesDetailComponent } from './invoices-detail/invoices-detail.component';
+export { ServicesComponent } from './services/services.component';
+export { ServicesDetailComponent } from './services-detail/services-detail.component';
+export { SidenavComponent } from './sidenav/sidenav.component';

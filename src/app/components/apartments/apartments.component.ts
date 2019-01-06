@@ -1,14 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { map } from 'rxjs/operators';
 import { MatTableDataSource } from '@angular/material';
 import { MatDialog } from '@angular/material';
 
 import { Mode } from '../../utils/utils'
 
 import { Apartment, Building} from '../../classes';
-import { BuildingService } from '../../services/buildings/building.service';
-import { ApartmentsService } from '../../services/apartments/apartments.service';
+import { BuildingService, ApartmentsService } from '../../services';
 import { ApartmentDetailComponent } from '../apartment-detail/apartment-detail.component'
 
 
@@ -21,10 +19,8 @@ export class ApartmentsComponent implements OnInit {
 
   private buildingId: string;
   private building: Building;
-  //private buildingName: string;
   private mode: Mode;  
   private apartments: MatTableDataSource<Apartment>;
-  private selectedBuilding: any;
   
   displayedColumns: string[] = ['view', 'edit', 'delete', 'apartmentsId'];
 
@@ -60,7 +56,7 @@ export class ApartmentsComponent implements OnInit {
   getBuilding = () => {
     return new Promise<Building>(
       (resolve, reject) => {
-        this.buildingService.getBuildingById$(this.buildingId).pipe()
+        this.buildingService.getBuildingById$(this.buildingId)
         .subscribe(
           resolve,
           reject

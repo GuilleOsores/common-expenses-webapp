@@ -7,7 +7,9 @@ export const environment = {
   production: false,
   api: {
     buildings: baseUrl + '/buildings',
-    apartments: baseUrl + '/buildings/:buildingId/apartments'
+    apartments: baseUrl + '/buildings/:buildingId/apartments',
+    invoices: baseUrl + '/buildings/:buildingId/invoices',
+    services: baseUrl + '/services',
   }
 };
 

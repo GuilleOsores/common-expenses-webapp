@@ -1,0 +1,43 @@
+<mat-card-title>Invoice</mat-card-title>
+<form id="formInvoiceDetail" [formGroup]="formGroup" (ngSubmit)="onSubmit()">
+  <div class="continer">
+    <div class="row">
+      <mat-form-field>
+        <input matInput type="text" formControlName="invoicesId" placeholder="invoicesId" [readonly]="true">
+      </mat-form-field>
+    </div>
+    <div class="row">
+      <mat-form-field>
+        <input matInput type="text" formControlName="year" placeholder="Year" [readonly]="data.mode === Mode.view || data.mode === Mode.delete">
+      </mat-form-field>
+    </div>
+    <div class="row">
+      <mat-form-field>
+        <input matInput type="text" formControlName="month" placeholder="Month" [readonly]="data.mode === Mode.view || data.mode === Mode.delete">
+      </mat-form-field>
+    </div>
+    <div class="row">
+      <mat-form-field>
+        <input matInput type="text" formControlName="ammount" placeholder="Ammount" [readonly]="data.mode === Mode.view || data.mode === Mode.delete">
+      </mat-form-field>
+    </div>
+    <div class="row">
+      <mat-form-field>
+        <input matInput type="text" formControlName="dueDate" placeholder="Due Date" [readonly]="data.mode === Mode.view || data.mode === Mode.delete">
+      </mat-form-field>
+    </div>
+    <div class="row">
+      <mat-form-field>
+        <input matInput type="text" formControlName="paidDate" placeholder="Paid Date" [readonly]="data.mode === Mode.view || data.mode === Mode.delete">
+      </mat-form-field>
+    </div>
+    <div class="row">
+      <mat-form-field>
+        <input matInput type="text" formControlName="service" placeholder="Service" [readonly]="data.mode === Mode.view || data.mode === Mode.delete">
+      </mat-form-field>
+    </div>
+    <button mat-raised-button *ngIf="data.mode === Mode.insert || data.mode === Mode.update" color="primary" type="submit" value="Submit">Submit</button>
+    <button mat-raised-button *ngIf="data.mode === Mode.delete" color="primary" type="submit" value="Submit">Delete</button>
+    <button mat-raised-button *ngIf="data.mode === Mode.view" color="primary" type="submit" value="Submit">Back</button>
+  </div>
+</form>

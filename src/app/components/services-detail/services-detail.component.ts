@@ -4,58 +4,52 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
 import { Mode } from '../../utils/utils'
 
-import { Building } from '../../classes';
-import { BuildingService } from '../../services'
+import { Service } from '../../classes';
+import { ServicesService } from '../../services'
 
 @Component({
-  selector: 'app-building-detail',
-  templateUrl: './building-detail.component.html',
-  styleUrls: ['./building-detail.component.css']
+  selector: 'app-services-detail',
+  templateUrl: './services-detail.component.html',
+  styleUrls: ['./services-detail.component.css']
 })
-export class BuildingDetailComponent implements OnInit {
+export class ServicesDetailComponent implements OnInit {
 
   private formGroup: FormGroup;
   private formControlId: FormControl;
   private formControlName: FormControl;
-  private formControlAddress: FormControl;
   private Mode = Mode;
 
   constructor(
-    private buildingService: BuildingService,
-    public dialogRef: MatDialogRef<BuildingDetailComponent>,
+    private buildingService: ServicesService,
+    public dialogRef: MatDialogRef<ServicesService>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) { }
 
   ngOnInit() {
     this.formGroup = new FormGroup({
-      buildingsId: this.formControlId = new FormControl( '' ),
+      servicesId: this.formControlId = new FormControl( '' ),
       name: this.formControlName = new FormControl( '', Validators.required ),
-      address: this.formControlAddress = new FormControl( '', Validators.required ),
     });
 
     if( !((<Mode>this.data.mode) === Mode.insert)){
-      this.getBuildingById(this.data.building.buildingsId)
+      this.getServiceById(this.data.service.servicesId)
       .then( 
-        (building) => {
-          console.log('el edificio');
-          
-          console.log(JSON.stringify(building));
-          this.formControlId.setValue(building.buildingsId);
-          this.formControlName.setValue(building.name);
-          this.formControlAddress.setValue(building.address);
+        (service) => {
+          this.formControlId.setValue(service.servicesId);
+          this.formControlName.setValue(service.name);
         }
       );
     }    
   }
 
-  getBuildingById = (id: any): Promise<Building> => {
+  getServiceById = (id: any): Promise<Service> => {
     return new Promise(
       (resolve, reject) => {
-        this.buildingService.getBuildingById$(id)
+        this.buildingService.getServiceById$(id)
         .subscribe(
-          (building) => {
-            if(building)
-              resolve(building);
+          (service) => {
+            if(service)
+              resolve(service);
             else
               reject('Building not found');
           },
@@ -72,13 +66,13 @@ export class BuildingDetailComponent implements OnInit {
     if(this.formGroup.valid){
       switch(this.data.mode){
         case Mode.insert:
-          this.newBuilding().then(this.closeDialog);
+          this.newService().then(this.closeDialog);
           break;
         case Mode.update:
-          this.updateBuilding().then(this.closeDialog);
+          this.updateService().then(this.closeDialog);
           break;
         case Mode.delete:
-          this.deleteBuilding().then(this.closeDialog);
+          this.deleteService().then(this.closeDialog);
           break;
         case Mode.view:
           this.dialogRef.close();
@@ -91,10 +85,10 @@ export class BuildingDetailComponent implements OnInit {
     this.dialogRef.close(this.formGroup.value);
   }
 
-  newBuilding (): Promise<Building> {
+  newService (): Promise<Service> {
     return new Promise(
       (resolve, reject) => {
-        this.buildingService.newBuilding$(this.formGroup.value)
+        this.buildingService.newService$(this.formGroup.value)
         .subscribe(
           resolve,
           reject
@@ -103,10 +97,10 @@ export class BuildingDetailComponent implements OnInit {
     )
   }
 
-  updateBuilding (): Promise<Building> {
+  updateService (): Promise<Service> {
     return new Promise(
       (resolve, reject) => {
-        this.buildingService.updateBuilding$(this.formGroup.value)
+        this.buildingService.updateService$(this.formGroup.value)
         .subscribe(
           resolve,
           reject
@@ -115,10 +109,10 @@ export class BuildingDetailComponent implements OnInit {
     )
   }
 
-  deleteBuilding (): Promise<Building> {
+  deleteService (): Promise<Service> {
     return new Promise(
       (resolve, reject) => {
-        this.buildingService.deleteBuilding$(this.formGroup.value.buildingsId)
+        this.buildingService.deleteService$(this.data.service.servicesId)
         .subscribe(
           resolve,
           reject
@@ -126,4 +120,5 @@ export class BuildingDetailComponent implements OnInit {
       }
     )
   }
+
 }

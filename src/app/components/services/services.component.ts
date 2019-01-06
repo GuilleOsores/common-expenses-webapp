@@ -5,49 +5,49 @@ import { MatDialog } from '@angular/material';
 
 import { Mode } from '../../utils/utils'
 
-import { BuildingService } from '../../services';
-import { Building } from '../../classes';
-import { BuildingDetailComponent } from '../building-detail/building-detail.component'
+import { ServicesService } from '../../services';
+import { Service } from '../../classes';
+import { ServicesDetailComponent } from '../services-detail/services-detail.component'
 
 @Component({
-  selector: 'app-buildings',
-  templateUrl: './buildings.component.html',
-  styleUrls: ['./buildings.component.css']
+  selector: 'app-services',
+  templateUrl: './services.component.html',
+  styleUrls: ['./services.component.css']
 })
-export class BuildingsComponent implements OnInit {
+export class ServicesComponent implements OnInit {
 
   private mode: Mode;  
-  buildings: MatTableDataSource<Building>;
-  selectedBuilding: any;
+  services: MatTableDataSource<Service>;
+  selectedService: any;
   
-  displayedColumns: string[] = ['launch', 'launchInvoices', 'view', 'edit', 'delete', 'name', 'address'];
+  displayedColumns: string[] = ['view', 'edit', 'delete', 'name'];
 
   constructor (
-    private buildingService: BuildingService,
+    private buildingService: ServicesService,
     private matDialog: MatDialog,
     private router: Router,
     private route: ActivatedRoute,
   ) {  }
 
   ngOnInit () {
-    this.getBuildings();
+    this.getServices();
   }
 
   applyFilter (filter: string){
-    this.buildings.filter = filter;
+    this.services.filter = filter;
   }
 
-  getBuildings = () => {
-    this.buildingService.getBuildings$()
+  getServices = () => {
+    this.buildingService.getServices$()
     .subscribe(
-      (buildings) => { this.buildings = new MatTableDataSource(buildings); },
+      (services) => { this.services = new MatTableDataSource(services); },
       error => {console.log('error::::');  console.log(error); }
     )
   }
 
-  createBuilding = () => {
+  createService = () => {
     const dialogRef = this.matDialog.open(
-      BuildingDetailComponent,
+      ServicesDetailComponent,
       {
         data: {
           mode: Mode.insert
@@ -56,7 +56,7 @@ export class BuildingsComponent implements OnInit {
     );
 
     dialogRef.afterClosed().subscribe(
-      this.getBuildings
+      this.getServices
       /*
       (building) => {
         console.log('el dialog devolvio::::');
@@ -67,18 +67,18 @@ export class BuildingsComponent implements OnInit {
     )
   }
 
-  editBuilding = (building) => {
+  editService = (service) => {
     const dialogRef = this.matDialog.open(
-      BuildingDetailComponent,
+      ServicesDetailComponent,
       {
         data: {
           mode: Mode.update,
-          building: building
+          service
         }
       }
     );
     dialogRef.afterClosed().subscribe(
-      this.getBuildings
+      this.getServices
       /*
       (building: Building) => {
         console.log('el dialog devolvio::::');
@@ -89,18 +89,18 @@ export class BuildingsComponent implements OnInit {
     )
   }
 
-  deleteBuilding = (building) => {
+  deleteService = (service) => {
     const dialogRef = this.matDialog.open(
-      BuildingDetailComponent,
+      ServicesDetailComponent,
       {
         data: {
           mode: Mode.delete,
-          building: building
+          service
         }
       }
     );
     dialogRef.afterClosed().subscribe(
-      this.getBuildings
+      this.getServices
       /*
       (building) => {
         console.log('el dialog devolvio:::::');
@@ -111,27 +111,16 @@ export class BuildingsComponent implements OnInit {
     )
   }
 
-  viewBuilding = (building) => {
+  viewService = (service) => {
     const dialogRef = this.matDialog.open(
-      BuildingDetailComponent,
+      ServicesDetailComponent,
       {
         data: {
           mode: Mode.view,
-          building: building
+          service
         }
       }
     );
   }
 
-  viewApartments (buildingId: string){
-    this.router.navigate([buildingId, 'apartments'], { relativeTo: this.route })
-    .then(console.log)
-    .catch(console.log);
-  }
-
-  viewInvoices (buildingId: string){
-    this.router.navigate([buildingId, 'invoices'], { relativeTo: this.route })
-    .then(console.log)
-    .catch(console.log);
-  }
 }
