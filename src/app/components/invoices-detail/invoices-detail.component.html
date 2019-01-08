@@ -7,6 +7,17 @@
       </mat-form-field>
     </div>
     <div class="row">
+        <!-->mat-form-field>
+          <input matInput [matDatepicker]="dp" placeholder="Month and Year" [formControl]="date">
+          <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+          <mat-datepicker #dp
+                          startView="multi-year"
+                          (yearSelected)="chosenYearHandler($event)"
+                          (monthSelected)="chosenMonthHandler($event, dp)"
+                          panelClass="example-month-picker">
+          </mat-datepicker>
+        </mat-form-field-->
+          
       <mat-form-field>
         <input matInput type="text" formControlName="year" placeholder="Year" [readonly]="data.mode === Mode.view || data.mode === Mode.delete">
       </mat-form-field>
@@ -33,7 +44,11 @@
     </div>
     <div class="row">
       <mat-form-field>
-        <input matInput type="text" formControlName="service" placeholder="Service" [readonly]="data.mode === Mode.view || data.mode === Mode.delete">
+        <mat-select placeholder="Service" [(ngModel)]="service" name="service" formControlName="service">
+          <mat-option *ngFor="let service of services" [value]="service.servicesId">
+            {{ service.name }}
+          </mat-option>
+        </mat-select>
       </mat-form-field>
     </div>
     <button mat-raised-button *ngIf="data.mode === Mode.insert || data.mode === Mode.update" color="primary" type="submit" value="Submit">Submit</button>

@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MatTableDataSource } from '@angular/material';
 import { MatDialog } from '@angular/material';
+import { Subscription } from 'rxjs'
 
 import { Mode } from '../../utils/utils'
 
@@ -14,11 +15,12 @@ import { BuildingDetailComponent } from '../building-detail/building-detail.comp
   templateUrl: './buildings.component.html',
   styleUrls: ['./buildings.component.css']
 })
-export class BuildingsComponent implements OnInit {
+export class BuildingsComponent implements OnInit, OnDestroy {
 
   private mode: Mode;  
   buildings: MatTableDataSource<Building>;
   selectedBuilding: any;
+  subscription: Subscription = new Subscription();
   
   displayedColumns: string[] = ['launch', 'launchInvoices', 'view', 'edit', 'delete', 'name', 'address'];
 
@@ -33,16 +35,21 @@ export class BuildingsComponent implements OnInit {
     this.getBuildings();
   }
 
+  ngOnDestroy (){
+    this.subscription.unsubscribe();
+  }
+
   applyFilter (filter: string){
     this.buildings.filter = filter;
   }
 
   getBuildings = () => {
-    this.buildingService.getBuildings$()
+    const subscription = this.buildingService.getBuildings$()
     .subscribe(
       (buildings) => { this.buildings = new MatTableDataSource(buildings); },
       error => {console.log('error::::');  console.log(error); }
     )
+    this.subscription.add(subscription);
   }
 
   createBuilding = () => {

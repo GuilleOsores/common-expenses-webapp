@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MatTableDataSource } from '@angular/material';
 import { MatDialog } from '@angular/material';
+import { Subscription } from 'rxjs'
 
 import { Mode } from '../../utils/utils'
 
@@ -15,12 +16,13 @@ import { ApartmentDetailComponent } from '../apartment-detail/apartment-detail.c
   templateUrl: './apartments.component.html',
   styleUrls: ['./apartments.component.css']
 })
-export class ApartmentsComponent implements OnInit {
+export class ApartmentsComponent implements OnInit, OnDestroy {
 
   private buildingId: string;
   private building: Building;
   private mode: Mode;  
   private apartments: MatTableDataSource<Apartment>;
+  subscription: Subscription = new Subscription();
   
   displayedColumns: string[] = ['view', 'edit', 'delete', 'apartmentsId'];
 
@@ -49,6 +51,10 @@ export class ApartmentsComponent implements OnInit {
     .catch(console.log);
   }
 
+  ngOnDestroy (){
+    this.subscription.unsubscribe();
+  }
+
   applyFilter (filter: string){
     this.apartments.filter = filter;
   }
@@ -56,21 +62,23 @@ export class ApartmentsComponent implements OnInit {
   getBuilding = () => {
     return new Promise<Building>(
       (resolve, reject) => {
-        this.buildingService.getBuildingById$(this.buildingId)
+        const subscription = this.buildingService.getBuildingById$(this.buildingId)
         .subscribe(
           resolve,
           reject
-        )
+        );
+        this.subscription.add(subscription);
       }
     )    
   }
 
   getApartments = () => {
-    this.apartmentsService.getApartments$(this.building.buildingsId)
+    const subscription = this.apartmentsService.getApartments$(this.building.buildingsId)
     .subscribe(
       (apartments) => { this.apartments = new MatTableDataSource(apartments);},
       error => {console.log('error::::');  console.log(error); }
-    )
+    );
+    this.subscription.add(subscription);
   }
 
   createApartment = () => {

@@ -1,18 +1,19 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { Subscription } from 'rxjs';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
 import { Mode } from '../../utils/utils'
 
-import { Invoice, Building } from '../../classes';
-import { InvoiceService } from '../../services'
+import { Invoice, Building, Service } from '../../classes';
+import { InvoiceService, ServicesService } from '../../services'
 
 @Component({
   selector: 'app-invoices-detail',
   templateUrl: './invoices-detail.component.html',
   styleUrls: ['./invoices-detail.component.css']
 })
-export class InvoicesDetailComponent implements OnInit {
+export class InvoicesDetailComponent implements OnInit, OnDestroy {
 
   private formGroup: FormGroup;
   private formControlId: FormControl;
@@ -25,9 +26,12 @@ export class InvoicesDetailComponent implements OnInit {
   private Mode = Mode;
   private invoice: Invoice;
   private building: Building;
+  private services: Service[];
+  private subscription: Subscription = new Subscription();
 
   constructor(
     private invoiceService: InvoiceService,
+    private servicesService: ServicesService,
     public dialogRef: MatDialogRef<InvoiceService>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
@@ -46,6 +50,13 @@ export class InvoicesDetailComponent implements OnInit {
       service: this.formControlService = new FormControl( '' ),
     });
 
+    this.subscription.add(
+      this.servicesService.getServices$()
+      .subscribe( 
+        (services) => this.services = services
+      )
+    );
+
     if( !((<Mode>this.data.mode) === Mode.insert)){
       this.getInvoiceById()
       .then( 
@@ -57,28 +68,34 @@ export class InvoicesDetailComponent implements OnInit {
           this.formControlAmmount.setValue(invoice.ammount);
           this.formControlDueDate.setValue(invoice.dueDate);
           this.formControlPaidDate.setValue(invoice.paidDate);
-          this.formControlService.setValue(invoice.service);
+          //this.formControlService.setValue(invoice.service);
         }
       );
     }    
   }
 
+  ngOnDestroy(){
+    this.subscription.unsubscribe();
+  }
+
   getInvoiceById = (): Promise<Invoice> => {
     return new Promise(
       (resolve, reject) => {
-        this.invoiceService.getInvoiceById$(this.building.buildingsId, this.invoice.invoicesId)
-        .subscribe(
-          (invoice) => {
-            if(invoice)
-              resolve(invoice);
-            else
-              reject('Building not found');
-          },
-          error => {
-            console.log(error);
-            reject(error);
-          }
-        );
+        this.subscription.add(
+          this.invoiceService.getInvoiceById$(this.building.buildingsId, this.invoice.invoicesId)
+          .subscribe(
+            (invoice) => {
+              if(invoice)
+                resolve(invoice);
+              else
+                reject('Building not found');
+            },
+            error => {
+              console.log(error);
+              reject(error);
+            }
+          )
+        )
       }
     )    
   }
