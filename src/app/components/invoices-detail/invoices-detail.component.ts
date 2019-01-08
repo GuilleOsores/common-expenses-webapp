@@ -42,8 +42,8 @@ export class InvoicesDetailComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.formGroup = new FormGroup({
       invoicesId: this.formControlId = new FormControl( '' ),
-      year: this.formControlYear = new FormControl( '', Validators.required ),
-      month: this.formControlMonth = new FormControl( '', Validators.required ),
+      year: this.formControlYear = new FormControl( '', [Validators.required, Validators.min(2018)] ),
+      month: this.formControlMonth = new FormControl( '', [Validators.required, Validators.min(1), Validators.max(12)] ),
       ammount: this.formControlAmmount = new FormControl( '', Validators.required ),
       dueDate: this.formControlDueDate = new FormControl( '', Validators.required ),
       paidDate: this.formControlPaidDate = new FormControl( '' ),
@@ -68,7 +68,7 @@ export class InvoicesDetailComponent implements OnInit, OnDestroy {
           this.formControlAmmount.setValue(invoice.ammount);
           this.formControlDueDate.setValue(invoice.dueDate);
           this.formControlPaidDate.setValue(invoice.paidDate);
-          //this.formControlService.setValue(invoice.service);
+          this.formControlService.setValue(invoice.service);
         }
       );
     }    
@@ -116,6 +116,14 @@ export class InvoicesDetailComponent implements OnInit, OnDestroy {
           this.dialogRef.close();
           break;
       }
+    }else{
+      
+      for( const control in this.formGroup.controls ){
+        console.log(JSON.stringify(this.formGroup.controls[control].errors));
+        if( this.formGroup.controls[control].errors ){
+          for ( const error in this.formGroup.controls[control].errors) console.error(`Error: ${this.formGroup.controls[control].errors[error]}`)
+        }
+      }      
     }
   }
 

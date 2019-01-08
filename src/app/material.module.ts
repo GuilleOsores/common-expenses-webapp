@@ -12,9 +12,11 @@ import {
   MatDialogModule,
   MatTooltipModule,
   MatCardModule,
-  MatSelectModule
+  MatSelectModule,
+  MatDatepickerModule,
+  MatNativeDateModule,
 } from '@angular/material';
-
+//MatMomentDateModule
 @NgModule({
   declarations: [
   ],
@@ -30,7 +32,9 @@ import {
     MatDialogModule,
     MatTooltipModule,
     MatCardModule,
-    MatSelectModule
+    MatSelectModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
   ],
   exports: [
     MatFormFieldModule,
@@ -43,7 +47,9 @@ import {
     MatDialogModule,
     MatTooltipModule,
     MatCardModule,
-    MatSelectModule
+    MatSelectModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
   ],
   providers: [],
   bootstrap: []
