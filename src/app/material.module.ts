@@ -15,6 +15,7 @@ import {
   MatSelectModule,
   MatDatepickerModule,
   MatNativeDateModule,
+  MatCheckboxModule
 } from '@angular/material';
 //MatMomentDateModule
 @NgModule({
@@ -35,6 +36,7 @@ import {
     MatSelectModule,
     MatDatepickerModule,
     MatNativeDateModule,
+    MatCheckboxModule
   ],
   exports: [
     MatFormFieldModule,
@@ -50,6 +52,7 @@ import {
     MatSelectModule,
     MatDatepickerModule,
     MatNativeDateModule,
+    MatCheckboxModule
   ],
   providers: [],
   bootstrap: []

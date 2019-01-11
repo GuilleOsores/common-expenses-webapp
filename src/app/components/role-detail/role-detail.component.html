@@ -24,16 +24,13 @@
               <mat-form-field>
                 <input matInput type="text"  placeholder="Program" formControlName="program" [readonly]="data.mode === Mode.view || data.mode === Mode.delete">
               </mat-form-field>
-              <h1>Actions</h1>
-              <div formArrayName="actions">
-                <div *ngIf="formGroup.get('permissions').controls[i].get('actions').controls.length">
-                  <i *ngFor="let action of formGroup.get('permissions').controls[i].get('actions').controls; let j=index">
-                    <mat-form-field>
-                      <input matInput type="text" formControlName="{{j}}" placeholder="Action" [readonly]="data.mode === Mode.view || data.mode === Mode.delete">
-                    </mat-form-field>
+              <i formArrayName="actions">
+                <i *ngIf="formGroup.get('permissions').controls[i].get('actions').controls.length">
+                  <i *ngFor="let action of formGroup.get('permissions').controls[i].get('actions').controls; let j=index">                    
+                    <mat-checkbox formControlName="{{j}}">{{ Mode[j] }}</mat-checkbox>
                   </i>
-                </div>
-              </div>
+                </i>
+              </i>
             </div>
           </div>
         </div>

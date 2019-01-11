@@ -7,7 +7,7 @@ import { Subscription } from 'rxjs'
 import { Mode } from '../../utils/utils'
 
 import { RolesService } from '../../services';
-import { Role } from 'common-expenses-libs';
+import { Role } from 'common-expenses-libs/libs';
 import { RoleDetailComponent } from '../role-detail/role-detail.component'
 
 @Component({

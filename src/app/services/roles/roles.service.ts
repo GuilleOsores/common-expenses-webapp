@@ -4,7 +4,7 @@ import { map } from 'rxjs/operators';
 
 import { environment } from '../../../environments/environment';
 
-import { Role } from 'common-expenses-libs';
+import { Role } from 'common-expenses-libs/libs';
 
 @Injectable({
   providedIn: 'root'

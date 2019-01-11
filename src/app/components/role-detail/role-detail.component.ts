@@ -4,7 +4,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
 import { Mode } from '../../utils/utils'
 
-import { Role, action, Permission } from 'common-expenses-libs';
+import { Role, action, Permission } from 'common-expenses-libs/libs';
 import { RolesService } from '../../services';
 
 @Component({
@@ -36,8 +36,9 @@ export class RoleDetailComponent implements OnInit {
       //permissions: new FormArray([])
       permissions: this.permissionsArray
     });
-
-    if( !((<Mode>this.data.mode) === Mode.insert)){
+    console.log("tostring::::" , Mode.insert.toString())
+    console.log("tostring::::" , Mode[1])
+    if( !((<Mode>this.data.mode) === Mode.insert)){ 
       this.getRoleById(this.data.role.rolesId)
       .then( 
         (role) => {
@@ -127,10 +128,10 @@ export class RoleDetailComponent implements OnInit {
       this.formBuilder.group({
         program: this.formBuilder.control(''),
         actions: this.formBuilder.array([
-          this.formBuilder.control(''),
-          this.formBuilder.control(''),
-          this.formBuilder.control(''),
-          this.formBuilder.control(''),
+          this.formBuilder.control(false),
+          this.formBuilder.control(false),
+          this.formBuilder.control(false),
+          this.formBuilder.control(false),
         ])
       })
     );
