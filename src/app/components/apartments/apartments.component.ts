@@ -24,7 +24,7 @@ export class ApartmentsComponent implements OnInit, OnDestroy {
   private apartments: MatTableDataSource<Apartment>;
   subscription: Subscription = new Subscription();
   
-  displayedColumns: string[] = ['view', 'edit', 'delete', 'apartmentsId'];
+  displayedColumns: string[] = ['view', 'edit', 'delete', 'apartmentsId', 'number'];
 
   constructor (
     private buildingService: BuildingService,

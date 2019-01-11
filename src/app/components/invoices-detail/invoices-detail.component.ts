@@ -45,8 +45,8 @@ export class InvoicesDetailComponent implements OnInit, OnDestroy {
       year: this.formControlYear = new FormControl( '', [Validators.required, Validators.min(2018)] ),
       month: this.formControlMonth = new FormControl( '', [Validators.required, Validators.min(1), Validators.max(12)] ),
       ammount: this.formControlAmmount = new FormControl( '', Validators.required ),
-      dueDate: this.formControlDueDate = new FormControl( '', Validators.required ),
-      paidDate: this.formControlPaidDate = new FormControl( '' ),
+      dueDate: this.formControlDueDate = new FormControl( {value: '', disabled: true}, Validators.required ),
+      paidDate: this.formControlPaidDate = new FormControl( {value: '', disabled: true} ),
       service: this.formControlService = new FormControl( '' ),
     });
 
@@ -61,7 +61,6 @@ export class InvoicesDetailComponent implements OnInit, OnDestroy {
       this.getInvoiceById()
       .then( 
         (invoice) => {          
-          console.log(JSON.stringify(invoice));
           this.formControlId.setValue(invoice.invoicesId);
           this.formControlYear.setValue(invoice.year);
           this.formControlMonth.setValue(invoice.month);
@@ -117,9 +116,7 @@ export class InvoicesDetailComponent implements OnInit, OnDestroy {
           break;
       }
     }else{
-      
       for( const control in this.formGroup.controls ){
-        console.log(JSON.stringify(this.formGroup.controls[control].errors));
         if( this.formGroup.controls[control].errors ){
           for ( const error in this.formGroup.controls[control].errors) console.error(`Error: ${this.formGroup.controls[control].errors[error]}`)
         }

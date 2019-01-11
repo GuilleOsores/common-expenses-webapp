@@ -19,6 +19,8 @@ import {
   ServicesDetailComponent,
   SidenavComponent,
 } from './components';
+import { RolesComponent } from './components/roles/roles.component';
+import { RoleDetailComponent } from './components/role-detail/role-detail.component';
 
 @NgModule({
   declarations: [
@@ -32,6 +34,8 @@ import {
     InvoicesDetailComponent,
     ServicesDetailComponent,
     ServicesComponent,
+    RolesComponent,
+    RoleDetailComponent,
   ],
   imports: [
     BrowserModule,
@@ -47,7 +51,8 @@ import {
     BuildingDetailComponent,
     ApartmentDetailComponent,
     ServicesDetailComponent,
-    InvoicesDetailComponent
+    InvoicesDetailComponent,
+    RoleDetailComponent
   ]
 })
 export class AppModule { }
