@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, Input, Output, Inject } from '@angular/core';
-import { FormGroup, FormControl, Validators, FormArray, FormBuilder } from '@angular/forms';
+import { FormGroup, FormControl, Validators, FormArray } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
 import { Mode } from '../../utils/utils'
@@ -14,66 +14,67 @@ import { RolesService } from '../../services';
 })
 export class RoleDetailComponent implements OnInit {
 
-  private formGroup: FormGroup; private permissionsArray: FormArray;
+  private formGroup: FormGroup;
   private Mode = Mode;
   private permisionRow: number = 0;
   private role: Role;
 
   constructor(
     private rolesService: RolesService,
-    private formBuilder: FormBuilder,
     public dialogRef: MatDialogRef<RoleDetailComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) { }
 
   ngOnInit() {
     const that = this;
-    this.permissionsArray = new FormArray([]);
-    this.formGroup = this.formBuilder.group({
-    //this.formGroup = new FormGroup({
+
+    this.formGroup = new FormGroup({
       rolesId: new FormControl( '' ),
       name: new FormControl( '', Validators.required ),
-      //permissions: new FormArray([])
-      permissions: this.permissionsArray
+      permissions: new FormArray([])
     });
-    console.log("tostring::::" , Mode.insert.toString())
-    console.log("tostring::::" , Mode[1])
+    
     if( !((<Mode>this.data.mode) === Mode.insert)){ 
       this.getRoleById(this.data.role.rolesId)
       .then( 
         (role) => {
+          const controlDisable = this.data.mode === Mode.view || this.data.mode === Mode.delete;
           this.formGroup.controls['rolesId'].setValue(role.rolesId);
           this.formGroup.controls['name'].setValue(role.name);
           that.role = role;
-/*
+          
           for( const prop in role ){
             if( this.formGroup.controls[prop] ){
               if(prop === 'permissions'){
                 console.log(`en if(prop === 'permissions'){`);
+                const permisionsArray = <FormArray>this.formGroup.controls['permissions'];
                 role.permissions.forEach(
                   (permission) => {
-                    const permisionsArray = <FormArray>this.formGroup.controls['permissions'];
+                    console.log(`permission.foreach: ${JSON.stringify(permission)}`);  
                     const actionsArray =  new FormArray([]);
 
-                    const itempermisionArray = new FormGroup({
-                      program: new FormControl('', Validators.required),
-                      actions: actionsArray                   
-                    });
-
-                    actionsArray.push(new FormControl(false));
-                    actionsArray.push(new FormControl(false));
-                    actionsArray.push(new FormControl(false));
-                    actionsArray.push(new FormControl(false));
+                    permisionsArray.push(
+                      new FormGroup({
+                        program: new FormControl(permission.program, Validators.required),
+                        actions: actionsArray
+                      })
+                    );
+                    
+                    actionsArray.push(new FormControl({value: false, disabled: controlDisable}));
+                    actionsArray.push(new FormControl({value: false, disabled: controlDisable}));
+                    actionsArray.push(new FormControl({value: false, disabled: controlDisable}));
+                    actionsArray.push(new FormControl({value: false, disabled: controlDisable}));
 
                     for(const action in permission.actions){
-                      actionsArray.controls[action].setValue(true)
+                      actionsArray.controls[action].setValue(permission.actions[action]);
                     }
                   }
                 )
               }else
                 this.formGroup.controls[prop].setValue(role[prop]);
             }
-          }*/
+
+          }
         }
       );
     }    
@@ -125,13 +126,13 @@ export class RoleDetailComponent implements OnInit {
   addNewPermisionRow = () => {
     const permisionsArray = <FormArray>this.formGroup.controls[`permissions`];
     permisionsArray.push(
-      this.formBuilder.group({
-        program: this.formBuilder.control(''),
-        actions: this.formBuilder.array([
-          this.formBuilder.control(false),
-          this.formBuilder.control(false),
-          this.formBuilder.control(false),
-          this.formBuilder.control(false),
+      new FormGroup({
+        program: new FormControl('', Validators.required),
+        actions: new FormArray([
+          new FormControl(false),
+          new FormControl(false),
+          new FormControl(false),
+          new FormControl(false)
         ])
       })
     );
