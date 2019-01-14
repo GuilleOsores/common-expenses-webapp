@@ -17,8 +17,8 @@
 
   <ng-container matColumnDef="launchInvoices">
     <th mat-header-cell *matHeaderCellDef></th>
-    <td mat-cell *matCellDef="let element" (click)="viewInvoices(element.buildingsId)" matTooltip="Open invoices">
-      <button mat-button>
+    <td mat-cell *matCellDef="let element" matTooltip="Open invoices">
+      <button mat-button (click)="viewInvoices(element.buildingsId)">
         <i class="material-icons">
           launch
         </i>
@@ -28,9 +28,9 @@
 
   <ng-container matColumnDef="view">
     <th mat-header-cell *matHeaderCellDef></th>
-    <td mat-cell *matCellDef="let element" (click)="viewBuilding(element)" matTooltip="View building">
-      <button mat-button>
-        <i class="material-icons" >
+    <td mat-cell *matCellDef="let element" matTooltip="View building">
+      <button mat-button (click)="viewBuilding(element)" *ngIf="permission && permission.action.read">
+        <i class="material-icons">
           search
         </i>
       </button>
@@ -39,9 +39,9 @@
 
   <ng-container matColumnDef="edit">
     <th mat-header-cell *matHeaderCellDef></th>
-    <td mat-cell *matCellDef="let element" (click)="editBuilding(element)" matTooltip="Edit building">
-      <button mat-button>
-        <i class="material-icons" >
+    <td mat-cell *matCellDef="let element" matTooltip="Edit building">
+      <button mat-button (click)="editBuilding(element)" *ngIf="permission && permission.action.write">
+        <i class="material-icons">
           edit
         </i>
       </button>
@@ -50,9 +50,9 @@
 
   <ng-container matColumnDef="delete">
     <th mat-header-cell *matHeaderCellDef></th>
-    <td mat-cell *matCellDef="let element" (click)="deleteBuilding(element)" matTooltip="Delete building">
-      <button mat-button>
-        <i class="material-icons" >
+    <td mat-cell *matCellDef="let element" matTooltip="Delete building">
+      <button mat-button (click)="deleteBuilding(element)" *ngIf="permission && permission.action.delete">
+        <i class="material-icons">
           delete
         </i>
       </button>
@@ -77,6 +77,6 @@
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
   <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 </table>
-<button mat-fab color="primary" (click)="createBuilding()" matTooltip="New building">
+<button mat-fab color="primary" (click)="createBuilding()" *ngIf="permission && permission.action.write" matTooltip="New building">
   <span style="font-size: 48px">+</span>
 </button>

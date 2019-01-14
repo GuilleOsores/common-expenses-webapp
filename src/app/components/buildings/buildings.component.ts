@@ -6,8 +6,8 @@ import { Subscription } from 'rxjs'
 
 import { Mode } from '../../utils/utils'
 
-import { BuildingService } from '../../services';
-import { Building } from '../../classes';
+import { BuildingService, AuthService } from '../../services';
+import { Building, Permission } from 'common-expenses-libs/libs';
 import { BuildingDetailComponent } from '../building-detail/building-detail.component'
 
 @Component({
@@ -21,17 +21,27 @@ export class BuildingsComponent implements OnInit, OnDestroy {
   buildings: MatTableDataSource<Building>;
   selectedBuilding: any;
   subscription: Subscription = new Subscription();
+  permission: Permission;
   
   displayedColumns: string[] = ['launch', 'launchInvoices', 'view', 'edit', 'delete', 'name', 'address'];
 
   constructor (
     private buildingService: BuildingService,
+    private authService: AuthService,
     private matDialog: MatDialog,
     private router: Router,
     private route: ActivatedRoute,
-  ) {  }
+  ) {
+      this.authService.getPermission('Buildings').subscribe(
+        (permission) => {
+          (permission) => permission.program === 'Buildings'
+          //this.permission = permission[0];
+        }
+      );
+    }
 
   ngOnInit () {
+    
     this.getBuildings();
   }
 

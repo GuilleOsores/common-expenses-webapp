@@ -1,0 +1,34 @@
+<mat-card-title>User</mat-card-title>
+<form id="formUserDetail" [formGroup]="formGroup" (ngSubmit)="onSubmit()">
+  <div class="continer">
+    <div class="row">
+      <mat-form-field *ngIf="data.mode !== Mode.insert">
+        <input matInput *ngIf="data.mode !== Mode.insert" type="text" formControlName="usersId" placeholder="Id" [readonly]="true">
+      </mat-form-field>
+    </div>
+    <div class="row">
+      <mat-form-field>
+        <input matInput type="text" formControlName="name" placeholder="Name" [readonly]="data.mode === Mode.view || data.mode === Mode.delete">
+      </mat-form-field>
+    </div>
+    <div formArrayName="roles">
+      <div *ngIf="formGroup.get('roles').controls.length">
+        <div class="row" *ngFor="let role of formGroup.get('roles').controls; let i=index">
+          <div formGroupName="{{i}}">
+              <mat-form-field>
+                  <input matInput type="text" formControlName="name" placeholder="Name" [readonly]="true" [value]="aRol.rolesId">
+                </mat-form-field>
+            <mat-select placeholder="Rol" name="role" formControlName="role" disabled="{{data.mode === Mode.view || data.mode === Mode.delete}}">
+              <mat-option *ngFor="let aRol of allRoles" [value]="aRol.name">
+                {{ service.name }}
+              </mat-option>
+            </mat-select>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button mat-raised-button *ngIf="data.mode === Mode.insert || data.mode === Mode.update" color="primary" type="submit" value="Submit">Submit</button>
+    <button mat-raised-button *ngIf="data.mode === Mode.delete" color="primary" type="submit" value="Submit">Delete</button>
+    <button mat-raised-button *ngIf="data.mode === Mode.view" color="primary" type="submit" value="Submit">Back</button>
+  </div>
+</form>

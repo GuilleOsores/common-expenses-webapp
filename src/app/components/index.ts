@@ -4,6 +4,7 @@ export { BuildingDetailComponent } from './building-detail/building-detail.compo
 export { BuildingsComponent } from './buildings/buildings.component';
 export { InvoicesComponent } from './invoices/invoices.component';
 export { RolesComponent } from './roles/roles.component';
+export { UsersComponent } from './users/users.component';
 export { InvoicesDetailComponent } from './invoices-detail/invoices-detail.component';
 export { ServicesComponent } from './services/services.component';
 export { ServicesDetailComponent } from './services-detail/services-detail.component';

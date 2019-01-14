@@ -13,7 +13,7 @@
     </div>
     <div class="row">
       Permissions
-      <button mat-mini-fab color="primary" (click)="addNewPermisionRow()" matTooltip="New permision">
+      <button mat-mini-fab color="primary" (click)="addNewPermisionRow()" matTooltip="New permision" ><!--*ngIf="data.mode === Mode.view || data.mode === Mode.delete"-->
         <span>+</span>
       </button>
 
@@ -24,12 +24,11 @@
               <mat-form-field>
                 <input matInput type="text"  placeholder="Program" formControlName="program" [readonly]="data.mode === Mode.view || data.mode === Mode.delete">
               </mat-form-field>
-              <i formArrayName="actions">
-                <i *ngIf="formGroup.get('permissions').controls[i].get('actions').controls.length">
-                  <i *ngFor="let action of formGroup.get('permissions').controls[i].get('actions').controls; let j=index">                    
-                    <mat-checkbox formControlName="{{j}}">{{ Mode[j] }}</mat-checkbox>
-                  </i>
-                </i>
+              <i formGroupName="action">           
+                <mat-checkbox formControlName="open">open</mat-checkbox>
+                <mat-checkbox formControlName="read">read</mat-checkbox>
+                <mat-checkbox formControlName="write">write</mat-checkbox>
+                <mat-checkbox formControlName="delete">delete</mat-checkbox>
               </i>
             </div>
           </div>

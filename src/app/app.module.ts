@@ -21,6 +21,8 @@ import {
 } from './components';
 import { RolesComponent } from './components/roles/roles.component';
 import { RoleDetailComponent } from './components/role-detail/role-detail.component';
+import { UsersComponent } from './components/users/users.component';
+import { UsersDetailComponent } from './components/users-detail/users-detail.component';
 
 @NgModule({
   declarations: [
@@ -36,6 +38,8 @@ import { RoleDetailComponent } from './components/role-detail/role-detail.compon
     ServicesComponent,
     RolesComponent,
     RoleDetailComponent,
+    UsersComponent,
+    UsersDetailComponent,
   ],
   imports: [
     BrowserModule,
@@ -52,7 +56,8 @@ import { RoleDetailComponent } from './components/role-detail/role-detail.compon
     ApartmentDetailComponent,
     ServicesDetailComponent,
     InvoicesDetailComponent,
-    RoleDetailComponent
+    RoleDetailComponent,
+    UsersDetailComponent
   ]
 })
 export class AppModule { }

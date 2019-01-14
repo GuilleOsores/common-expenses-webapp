@@ -4,7 +4,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
 import { Mode } from '../../utils/utils'
 
-import { Role, action, Permission } from 'common-expenses-libs/libs';
+import { Role, Permission} from 'common-expenses-libs/libs';
 import { RolesService } from '../../services';
 
 @Component({
@@ -56,18 +56,14 @@ export class RoleDetailComponent implements OnInit {
                     permisionsArray.push(
                       new FormGroup({
                         program: new FormControl(permission.program, Validators.required),
-                        actions: actionsArray
+                        action: new FormGroup({
+                          open: new FormControl({value: permission.action.open, disabled: controlDisable}),
+                          read: new FormControl({value: permission.action.read, disabled: controlDisable}),
+                          write: new FormControl({value: permission.action.write, disabled: controlDisable}),
+                          delete: new FormControl({value: permission.action.delete, disabled: controlDisable})                          
+                        })
                       })
                     );
-                    
-                    actionsArray.push(new FormControl({value: false, disabled: controlDisable}));
-                    actionsArray.push(new FormControl({value: false, disabled: controlDisable}));
-                    actionsArray.push(new FormControl({value: false, disabled: controlDisable}));
-                    actionsArray.push(new FormControl({value: false, disabled: controlDisable}));
-
-                    for(const action in permission.actions){
-                      actionsArray.controls[action].setValue(permission.actions[action]);
-                    }
                   }
                 )
               }else
@@ -128,12 +124,12 @@ export class RoleDetailComponent implements OnInit {
     permisionsArray.push(
       new FormGroup({
         program: new FormControl('', Validators.required),
-        actions: new FormArray([
-          new FormControl(false),
-          new FormControl(false),
-          new FormControl(false),
-          new FormControl(false)
-        ])
+        action: new FormGroup({
+          open: new FormControl(false),
+          read: new FormControl(false),
+          write: new FormControl(false),
+          delete: new FormControl(false)
+        })
       })
     );
   }

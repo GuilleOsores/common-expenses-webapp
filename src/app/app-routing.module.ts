@@ -6,7 +6,8 @@ import {
     BuildingsComponent,
     InvoicesComponent,
     ServicesComponent,
-    RolesComponent
+    RolesComponent,
+    UsersComponent
 } from './components'
  
 const routes: Routes = [
@@ -29,6 +30,10 @@ const routes: Routes = [
     {
         path: 'roles',
         component: RolesComponent,
+    },
+    {
+        path: 'users',
+        component: UsersComponent,
     }
 ]
 

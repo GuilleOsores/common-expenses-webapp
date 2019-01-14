@@ -11,6 +11,7 @@ export const environment = {
     invoices: baseUrl + '/buildings/:buildingId/invoices',
     services: baseUrl + '/services',
     roles: baseUrl + '/roles',
+    users: baseUrl + '/users',
   }
 };
 
