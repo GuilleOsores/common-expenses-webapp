@@ -1,11 +1,12 @@
 import { Component, OnInit, OnDestroy, Input, Output, Inject } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormGroup, FormControl, Validators, FormArray } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
 import { Mode } from '../../utils/utils'
 
-import { User } from 'common-expenses-libs/libs';
-import { UsersService } from '../../services'
+import { User, Role } from 'common-expenses-libs/libs';
+import { UsersService, RolesService } from '../../services'
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-users-detail',
@@ -16,9 +17,13 @@ export class UsersDetailComponent implements OnInit {
 
   private formGroup: FormGroup;
   private Mode = Mode;
+  private allRoles: Role[];
+  private subscriptions: Subscription = new Subscription();
+  private selectedRolesId: string[];
 
   constructor(
     private usersService: UsersService,
+    private rolesService: RolesService,
     public dialogRef: MatDialogRef<UsersDetailComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) { }
@@ -27,10 +32,7 @@ export class UsersDetailComponent implements OnInit {
     this.formGroup = new FormGroup({
      usersId: new FormControl( '' ),
       name: new FormControl( '', Validators.required ),
-      roles: new FormGroup({
-        rolesId: new FormControl( '' ),
-        name: new FormControl( '' )
-      })
+      roles: new FormArray([])
     });
 
     if( !((<Mode>this.data.mode) === Mode.insert)){
@@ -38,13 +40,30 @@ export class UsersDetailComponent implements OnInit {
       .then( 
         (user) => {
           for( const prop in user ){
-            if( this.formGroup.controls[prop] ){
+            if( this.formGroup.controls[prop] && prop === 'roles' ){
+              const rolesArray = <FormArray>this.formGroup.controls['roles'];
+              for(let rol in user.roles){
+                rolesArray.push(
+                  new FormGroup({
+                    rolesId: new FormControl(''),
+                    name: new FormControl('')
+                  })
+                )
+              }
+            }else{
               this.formGroup.controls[prop].setValue(user[prop]);
             }
           }
         }
       );
-    }    
+    }
+
+    this.subscriptions.add(
+      this.rolesService.getRoles$()
+      .subscribe(
+        (roles) => this.allRoles = roles
+      )
+    )
   }
 
   getUserById = (id: any): Promise<User> => {
@@ -88,6 +107,20 @@ export class UsersDetailComponent implements OnInit {
 
   closeDialog = () => {
     this.dialogRef.close(this.formGroup.value);
+  }
+
+  addNewRoleRow = () => {
+    const rolesArray = <FormArray>this.formGroup.controls[`roles`];
+    rolesArray.push(
+      new FormGroup({
+        rolesId: new FormControl(''),
+        name: new FormControl('')
+      })
+    );
+  }
+
+  changeSelectedRole = (...params) => {
+    console.log(`changeSelectedRole params: ${JSON.stringify(params)}`)
   }
 
   newUser (): Promise<User> {

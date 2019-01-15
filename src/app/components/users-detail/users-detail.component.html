@@ -11,18 +11,25 @@
         <input matInput type="text" formControlName="name" placeholder="Name" [readonly]="data.mode === Mode.view || data.mode === Mode.delete">
       </mat-form-field>
     </div>
-    <div formArrayName="roles">
-      <div *ngIf="formGroup.get('roles').controls.length">
-        <div class="row" *ngFor="let role of formGroup.get('roles').controls; let i=index">
-          <div formGroupName="{{i}}">
+    <div class="row">
+      Roles
+      <button mat-mini-fab color="primary" (click)="addNewRoleRow()" matTooltip="New role" ><!--*ngIf="data.mode === Mode.view || data.mode === Mode.delete"-->
+        <span>+</span>
+      </button>
+
+      <div formArrayName="roles">
+        <div *ngIf="formGroup.get('roles').controls.length > 0">
+          <div class="row" *ngFor="let role of formGroup.get('roles').controls; let i=index">
+            <div formGroupName="{{i}}">
               <mat-form-field>
-                  <input matInput type="text" formControlName="name" placeholder="Name" [readonly]="true" [value]="aRol.rolesId">
-                </mat-form-field>
-            <mat-select placeholder="Rol" name="role" formControlName="role" disabled="{{data.mode === Mode.view || data.mode === Mode.delete}}">
-              <mat-option *ngFor="let aRol of allRoles" [value]="aRol.name">
-                {{ service.name }}
-              </mat-option>
-            </mat-select>
+                <input matInput type="text" formControlName="rolesId" placeholder="Id" [readonly]="true">
+              </mat-form-field>
+              <mat-select placeholder="Name" name="name" formControlName="name" disabled="{{data.mode === Mode.view || data.mode === Mode.delete}}">
+                <mat-option *ngFor="let aRol of allRoles; let i = i" [value]="aRol.name" (click)="changeSelectedRole(i, aRol)">
+                  {{ aRol.name }}
+                </mat-option>
+              </mat-select>
+            </div>
           </div>
         </div>
       </div>
