@@ -39,14 +39,13 @@ export class UsersDetailComponent implements OnInit {
       this.getUserById(this.data.user.usersId)
       .then( 
         (user) => {
-          for( const prop in user ){
-            if( this.formGroup.controls[prop] && prop === 'roles' ){
+          for(const prop in user ){
+            if(this.formGroup.controls[prop] && prop === 'roles' ){
               const rolesArray = <FormArray>this.formGroup.controls['roles'];
-              for(let rol in user.roles){
+              for(const rol of user.roles){
                 rolesArray.push(
                   new FormGroup({
-                    rolesId: new FormControl(''),
-                    name: new FormControl('')
+                    rolesId: new FormControl(rol.rolesId),
                   })
                 )
               }
@@ -114,13 +113,14 @@ export class UsersDetailComponent implements OnInit {
     rolesArray.push(
       new FormGroup({
         rolesId: new FormControl(''),
-        name: new FormControl('')
       })
     );
   }
 
-  changeSelectedRole = (...params) => {
-    console.log(`changeSelectedRole params: ${JSON.stringify(params)}`)
+  deleteRolFormControl = (id: number) => {
+console.log(`el id:::::::: ${id}`)
+    const rolesArray = <FormArray>this.formGroup.controls['roles'];
+    rolesArray.removeAt(id);
   }
 
   newUser (): Promise<User> {
