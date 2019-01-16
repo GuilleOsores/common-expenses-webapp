@@ -1,0 +1,13 @@
+.mat-cell {
+    padding: 4px;
+}
+
+.mat-header-cell {
+    padding: 4px;
+}
+
+.mat-button {
+    padding-left: 8px;
+    padding-right: 8px;
+    min-width: 0px;
+}

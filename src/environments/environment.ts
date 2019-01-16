@@ -10,6 +10,8 @@ export const environment = {
     apartments: baseUrl + '/buildings/:buildingId/apartments',
     invoices: baseUrl + '/buildings/:buildingId/invoices',
     services: baseUrl + '/services',
+    roles: baseUrl + '/roles',
+    users: baseUrl + '/users',
   }
 };
 

@@ -1,0 +1,42 @@
+<mat-card-title>Building</mat-card-title>
+<form id="formRoleDetail" [formGroup]="formGroup" (ngSubmit)="onSubmit()">
+  <div class="continer">
+    <div class="row">
+      <mat-form-field *ngIf="data.mode !== Mode.insert">
+        <input matInput type="text" formControlName="rolesId" placeholder="Id" [readonly]="true">
+      </mat-form-field>
+    </div>
+    <div class="row">
+      <mat-form-field>
+        <input matInput type="text" formControlName="name" placeholder="Name" [readonly]="data.mode === Mode.view || data.mode === Mode.delete">
+      </mat-form-field>
+    </div>
+    <div class="row">
+      Permissions
+      <button mat-mini-fab color="primary" (click)="addNewPermisionRow()" matTooltip="New permision" ><!--*ngIf="data.mode === Mode.view || data.mode === Mode.delete"-->
+        <span>+</span>
+      </button>
+
+      <div formArrayName="permissions">
+        <div *ngIf="formGroup.get('permissions').controls.length">
+          <div class="row" *ngFor="let permission of formGroup.get('permissions').controls; let i=index">
+            <div formGroupName="{{i}}">                
+              <mat-form-field>
+                <input matInput type="text"  placeholder="Program" formControlName="program" [readonly]="data.mode === Mode.view || data.mode === Mode.delete">
+              </mat-form-field>
+              <i formGroupName="action">           
+                <mat-checkbox formControlName="open">open</mat-checkbox>
+                <mat-checkbox formControlName="read">read</mat-checkbox>
+                <mat-checkbox formControlName="write">write</mat-checkbox>
+                <mat-checkbox formControlName="delete">delete</mat-checkbox>
+              </i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button mat-raised-button *ngIf="data.mode === Mode.insert || data.mode === Mode.update" color="primary" type="submit" value="Submit">Submit</button>
+    <button mat-raised-button *ngIf="data.mode === Mode.delete" color="primary" type="submit" value="Submit">Delete</button>
+    <button mat-raised-button *ngIf="data.mode === Mode.view" color="primary" type="submit" value="Submit">Back</button>
+  </div>
+</form>

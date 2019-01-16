@@ -15,9 +15,12 @@ import { BuildingService } from '../../services'
 export class BuildingDetailComponent implements OnInit {
 
   private formGroup: FormGroup;
+  /*
   private formControlId: FormControl;
   private formControlName: FormControl;
   private formControlAddress: FormControl;
+  private formControlAddress: FormControl;
+  */
   private Mode = Mode;
 
   constructor(
@@ -28,21 +31,21 @@ export class BuildingDetailComponent implements OnInit {
 
   ngOnInit() {
     this.formGroup = new FormGroup({
-      buildingsId: this.formControlId = new FormControl( '' ),
-      name: this.formControlName = new FormControl( '', Validators.required ),
-      address: this.formControlAddress = new FormControl( '', Validators.required ),
+     buildingsId: new FormControl( '' ),
+      name: new FormControl( '', Validators.required ),
+      address: new FormControl( '', Validators.required ),
+      commonExpensesAmmount: new FormControl( '', Validators.required ),
     });
 
     if( !((<Mode>this.data.mode) === Mode.insert)){
       this.getBuildingById(this.data.building.buildingsId)
       .then( 
         (building) => {
-          console.log('el edificio');
-          
-          console.log(JSON.stringify(building));
-          this.formControlId.setValue(building.buildingsId);
-          this.formControlName.setValue(building.name);
-          this.formControlAddress.setValue(building.address);
+          for( const prop in building ){
+            if( this.formGroup.controls[prop] ){
+              this.formGroup.controls[prop].setValue(building[prop]);
+            }
+          }
         }
       );
     }    

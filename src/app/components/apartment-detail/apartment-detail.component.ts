@@ -15,7 +15,7 @@ import { ApartmentsService } from '../../services'
 export class ApartmentDetailComponent implements OnInit {
 
   private formGroup: FormGroup;
-  private formControlId: FormControl;
+  //private formControlId: FormControl;
   //private formControlName: FormControl;
   //private formControlAddress: FormControl;
   private Mode = Mode;
@@ -33,19 +33,26 @@ export class ApartmentDetailComponent implements OnInit {
 
   ngOnInit() {
     this.formGroup = new FormGroup({
-      apartmentsId: this.formControlId = new FormControl( '', Validators.required ),
-      //name: this.formControlName = new FormControl( '', Validators.required ),
+      apartmentsId: new FormControl( '' ),
+      number: new FormControl( '', Validators.required ),
       //address: this.formControlAddress = new FormControl( '', Validators.required ),
     });
 
     if( !((<Mode>this.data.mode) === Mode.insert)){
       this.getApartmentById()
       .then( 
-        (apartment) => {          
+        (apartment) => {
+          /*
           console.log(JSON.stringify(apartment));
           this.formControlId.setValue(apartment.apartmentsId);
           //this.formControlName.setValue(building.name);
           //this.formControlAddress.setValue(building.address);
+          */
+          for( const prop in apartment ){
+            if( this.formGroup.controls[prop] ){
+              this.formGroup.controls[prop].setValue(apartment[prop]);
+            }
+          }
         }
       );
     }    

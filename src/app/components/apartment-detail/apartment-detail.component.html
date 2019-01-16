@@ -3,15 +3,16 @@
   <div class="continer">
     <div class="row">
       <mat-form-field>
-        <input matInput type="text" formControlName="apartmentsId" placeholder="Id" [readonly]="data.mode === Mode.view || data.mode === Mode.delete">
+        <input matInput type="text" formControlName="apartmentsId" placeholder="Id" [readonly]="true">
+      </mat-form-field>
+    </div>
+   
+    <div class="row">
+      <mat-form-field>
+        <input matInput type="number" formControlName="number" placeholder="Number" [readonly]="data.mode === Mode.view || data.mode === Mode.delete">
       </mat-form-field>
     </div>
     <!--
-    <div class="row">
-      <mat-form-field>
-        <input matInput type="text" formControlName="name" placeholder="Name" [readonly]="data.mode === Mode.view || data.mode === Mode.delete">
-      </mat-form-field>
-    </div>
     <div class="row">
       <mat-form-field>
         <input matInput type="text" formControlName="address" placeholder="Address" [readonly]="data.mode === Mode.view || data.mode === Mode.delete">

@@ -5,7 +5,9 @@ import {
     ApartmentsComponent,
     BuildingsComponent,
     InvoicesComponent,
-    ServicesComponent
+    ServicesComponent,
+    RolesComponent,
+    UsersComponent
 } from './components'
  
 const routes: Routes = [
@@ -24,6 +26,14 @@ const routes: Routes = [
     {
         path: 'services',
         component: ServicesComponent,
+    },
+    {
+        path: 'roles',
+        component: RolesComponent,
+    },
+    {
+        path: 'users',
+        component: UsersComponent,
     }
 ]
 

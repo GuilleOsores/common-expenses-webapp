@@ -2,7 +2,7 @@
 <form id="formInvoiceDetail" [formGroup]="formGroup" (ngSubmit)="onSubmit()">
   <div class="continer">
     <div class="row">
-      <mat-form-field>
+      <mat-form-field *ngIf="data.mode !== Mode.insert">
         <input matInput type="text" formControlName="invoicesId" placeholder="invoicesId" [readonly]="true">
       </mat-form-field>
     </div>
@@ -19,32 +19,36 @@
         </mat-form-field-->
           
       <mat-form-field>
-        <input matInput type="text" formControlName="year" placeholder="Year" [readonly]="data.mode === Mode.view || data.mode === Mode.delete">
+        <input matInput type="number" formControlName="year" placeholder="Year" [readonly]="data.mode === Mode.view || data.mode === Mode.delete">
       </mat-form-field>
     </div>
     <div class="row">
       <mat-form-field>
-        <input matInput type="text" formControlName="month" placeholder="Month" [readonly]="data.mode === Mode.view || data.mode === Mode.delete">
+        <input matInput type="number" formControlName="month" placeholder="Month" [readonly]="data.mode === Mode.view || data.mode === Mode.delete">
       </mat-form-field>
     </div>
     <div class="row">
       <mat-form-field>
-        <input matInput type="text" formControlName="ammount" placeholder="Ammount" [readonly]="data.mode === Mode.view || data.mode === Mode.delete">
+        <input matInput type="number" formControlName="ammount" placeholder="Ammount" [readonly]="data.mode === Mode.view || data.mode === Mode.delete">
       </mat-form-field>
     </div>
     <div class="row">
       <mat-form-field>
-        <input matInput type="text" formControlName="dueDate" placeholder="Due Date" [readonly]="data.mode === Mode.view || data.mode === Mode.delete">
+        <input matInput [matDatepicker]="dpDueDate" formControlName="dueDate" placeholder="Due Date">
+        <mat-datepicker-toggle matSuffix [for]="dpDueDate"></mat-datepicker-toggle>
+        <mat-datepicker #dpDueDate disabled="{{data.mode === Mode.view || data.mode === Mode.delete}}"></mat-datepicker>
       </mat-form-field>
     </div>
     <div class="row">
       <mat-form-field>
-        <input matInput type="text" formControlName="paidDate" placeholder="Paid Date" [readonly]="data.mode === Mode.view || data.mode === Mode.delete">
+        <input matInput [matDatepicker]="dpPaidDate" formControlName="paidDate" placeholder="Paid Date">
+        <mat-datepicker-toggle matSuffix [for]="dpPaidDate"></mat-datepicker-toggle>
+        <mat-datepicker #dpPaidDate disabled="{{data.mode === Mode.view || data.mode === Mode.delete}}"></mat-datepicker>
       </mat-form-field>
     </div>
     <div class="row">
       <mat-form-field>
-        <mat-select placeholder="Service" [(ngModel)]="service" name="service" formControlName="service">
+        <mat-select placeholder="Service" [(ngModel)]="service" name="service" formControlName="service" disabled="{{data.mode === Mode.view || data.mode === Mode.delete}}">
           <mat-option *ngFor="let service of services" [value]="service.servicesId">
             {{ service.name }}
           </mat-option>
