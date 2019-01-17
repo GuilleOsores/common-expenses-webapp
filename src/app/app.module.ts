@@ -17,17 +17,19 @@ import {
   InvoicesDetailComponent,
   ServicesComponent,
   ServicesDetailComponent,
+  RolesComponent,
+  RoleDetailComponent,
+  UsersComponent,
+  UsersDetailComponent,
+  BuildingsListComponent,
   SidenavComponent,
 } from './components';
-import { RolesComponent } from './components/roles/roles.component';
-import { RoleDetailComponent } from './components/role-detail/role-detail.component';
-import { UsersComponent } from './components/users/users.component';
-import { UsersDetailComponent } from './components/users-detail/users-detail.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     BuildingsComponent,
+    BuildingsListComponent,
     ApartmentsComponent,
     BuildingDetailComponent,
     SidenavComponent,

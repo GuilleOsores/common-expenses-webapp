@@ -10,3 +10,5 @@ export { ServicesComponent } from './services/services.component';
 export { ServicesDetailComponent } from './services-detail/services-detail.component';
 export { RoleDetailComponent } from './role-detail/role-detail.component';
 export { SidenavComponent } from './sidenav/sidenav.component';
+export { UsersDetailComponent } from './users-detail/users-detail.component';
+export { BuildingsListComponent } from './buildings-list/buildings-list.component';
