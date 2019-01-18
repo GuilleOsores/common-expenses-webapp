@@ -6,6 +6,7 @@ import { Mode } from '../../utils/utils'
 
 import { Role, Permission} from 'common-expenses-libs/libs';
 import { RolesService } from '../../services';
+import { Action } from 'rxjs/internal/scheduler/Action';
 
 @Component({
   selector: 'app-role-detail',
@@ -135,6 +136,7 @@ export class RoleDetailComponent implements OnInit {
   }
 
   newRole (): Promise<Role> {
+    this.deleteProgramsWithoutPermissions();
     return new Promise(
       (resolve, reject) => {
         this.rolesService.newRole$(this.formGroup.value)
@@ -146,9 +148,10 @@ export class RoleDetailComponent implements OnInit {
     )
   }
 
-  updateRole (): Promise<Role> {
+  updateRole (): Promise<Role> | any {
+    this.deleteProgramsWithoutPermissions();
     return new Promise(
-      (resolve, reject) => {
+      (resolve, reject) => {console.log("this.formGroup.value: "); console.dir(this.formGroup.value);
         this.rolesService.updateRole$(this.formGroup.value)
         .subscribe(
           resolve,
@@ -156,6 +159,32 @@ export class RoleDetailComponent implements OnInit {
         );
       }
     )
+  }
+
+  deleteProgramsWithoutPermissions () {
+    let permissionsCtrlArray = <FormArray>this.formGroup.controls['permissions'];
+    
+    const _mapedArray =  permissionsCtrlArray.controls.map(
+      (permissionsCtrlGroup: FormGroup, index, abtractControl) => {
+        console.log("en map::");
+        const actionCtrlGroup = <FormGroup>permissionsCtrlGroup.controls['action'];
+        console.log("actionCtrlGroup: ");
+        console.dir(actionCtrlGroup.value);
+        if(actionCtrlGroup.controls['open'].value || actionCtrlGroup.controls['read'].value ||
+        actionCtrlGroup.controls['write'].value || actionCtrlGroup.controls['delete'].value)
+          return permissionsCtrlGroup;
+      }
+    )
+    .filter(
+      (value) => !!value
+    );
+
+    this.formGroup.setControl('permissions', (_mapedArray.length) ? new FormArray(_mapedArray) : new FormArray(new Array<FormControl>()));
+  }
+
+  removePermission (id: number) {
+    const permisionsCtrl = this.formGroup.controls['permissions'];
+    (<FormArray>permisionsCtrl).removeAt(id);
   }
 
   deleteRole (): Promise<Role> {

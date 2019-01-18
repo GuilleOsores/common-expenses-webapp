@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, Input, Output, Inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
 import { FormGroup, FormControl, Validators, FormArray } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
@@ -13,13 +13,12 @@ import { Subscription } from 'rxjs';
   templateUrl: './users-detail.component.html',
   styleUrls: ['./users-detail.component.css']
 })
-export class UsersDetailComponent implements OnInit {
+export class UsersDetailComponent implements OnInit, OnDestroy {
 
   private formGroup: FormGroup;
   private Mode = Mode;
   private allRoles: Role[];
   private subscriptions: Subscription = new Subscription();
-  private selectedRolesId: string[];
 
   constructor(
     private usersService: UsersService,
@@ -36,18 +35,15 @@ export class UsersDetailComponent implements OnInit {
     });
 
     if( !((<Mode>this.data.mode) === Mode.insert)){
+
       this.getUserById(this.data.user.usersId)
       .then( 
         (user) => {
-          for(const prop in user ){
+          for(const prop in user){
             if(this.formGroup.controls[prop] && prop === 'roles' ){
               const rolesArray = <FormArray>this.formGroup.controls['roles'];
-              for(const rol of user.roles){
-                rolesArray.push(
-                  new FormGroup({
-                    rolesId: new FormControl(rol.rolesId),
-                  })
-                )
+              for(const rolId of user.roles){
+                rolesArray.push(new FormControl(rolId));
               }
             }else{
               this.formGroup.controls[prop].setValue(user[prop]);
@@ -65,22 +61,28 @@ export class UsersDetailComponent implements OnInit {
     )
   }
 
+  ngOnDestroy () {
+    this.subscriptions.unsubscribe();
+  }
+
   getUserById = (id: any): Promise<User> => {
     return new Promise(
       (resolve, reject) => {
-        this.usersService.getUserById$(id)
-        .subscribe(
-          (user) => {
-            if(user)
-              resolve(user);
-            else
-              reject('User not found');
-          },
-          error => {
-            console.log(error);
-            reject(error);
-          }
-        );
+        this.subscriptions.add(
+          this.usersService.getUserById$(id)
+          .subscribe(
+            (user) => {
+              if(user)
+                resolve(user);
+              else
+                reject('User not found');
+            },
+            error => {
+              console.log(error);
+              reject(error);
+            }
+          )
+        )
       }
     )    
   }
@@ -89,9 +91,11 @@ export class UsersDetailComponent implements OnInit {
     if(this.formGroup.valid){
       switch(this.data.mode){
         case Mode.insert:
+          this.removeEmptyRoles();
           this.newUser().then(this.closeDialog);
           break;
         case Mode.update:
+          this.removeEmptyRoles();
           this.updateUser().then(this.closeDialog);
           break;
         case Mode.delete:
@@ -104,21 +108,29 @@ export class UsersDetailComponent implements OnInit {
     }
   }
 
+  removeEmptyRoles () {
+    const rolesArray = <FormArray>this.formGroup.controls[`roles`];
+
+    this.formGroup.setControl(
+      'roles',
+      new FormArray(
+        rolesArray.controls.filter(
+          (rolControl: FormControl) => (rolControl.value) ? true : false
+        )
+      )
+    );
+  }
+
   closeDialog = () => {
     this.dialogRef.close(this.formGroup.value);
   }
 
   addNewRoleRow = () => {
     const rolesArray = <FormArray>this.formGroup.controls[`roles`];
-    rolesArray.push(
-      new FormGroup({
-        rolesId: new FormControl(''),
-      })
-    );
+    rolesArray.push(new FormControl('', Validators.required));
   }
 
   deleteRolFormControl = (id: number) => {
-console.log(`el id:::::::: ${id}`)
     const rolesArray = <FormArray>this.formGroup.controls['roles'];
     rolesArray.removeAt(id);
   }
