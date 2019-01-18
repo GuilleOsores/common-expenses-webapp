@@ -11,9 +11,19 @@ import { pipe, of, Observable } from 'rxjs';
 export class AuthService {
 
   private permission: Permission[];
+  private authenticated: boolean = false;
 
   constructor(private rolesService: RolesService) {
     //this.getPermission();
+  }
+
+  needsLogin () : boolean {
+    return !this.authenticated;
+  }
+
+  login () {
+    this.authenticated = true;
+    return of(true);
   }
 
   getPermission (program: string){

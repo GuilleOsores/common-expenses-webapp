@@ -12,3 +12,4 @@ export { RoleDetailComponent } from './role-detail/role-detail.component';
 export { SidenavComponent } from './sidenav/sidenav.component';
 export { UsersDetailComponent } from './users-detail/users-detail.component';
 export { BuildingsListComponent } from './buildings-list/buildings-list.component';
+export { LoginComponent } from './login/login.component';
