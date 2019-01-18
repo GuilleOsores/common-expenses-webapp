@@ -1,14 +1,31 @@
 /* You can add global styles to this file, and also import other style files */
 @import "styles-variables";
 
-@import '~bootstrap/scss/bootstrap-reboot';
-@import '~bootstrap/scss/bootstrap-grid';
+//@import '~bootstrap/scss/bootstrap-reboot';
+@import '~bootstrap/scss/functions';
+@import '~bootstrap/scss/variables';
+@import '~bootstrap/scss/mixins';
+@import '~bootstrap/scss/reboot';
+@import '~bootstrap/scss/grid';
+//@import '~bootstrap/scss/bootstrap-grid';
 @import '~bootstrap/scss/bootstrap';
 
 html, body, { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
-/*
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
-*/
+.table td{
+    vertical-align: middle;
+}
+.table th{
+    vertical-align: middle;
+}
+.table thead th{
+    vertical-align: middle;
+}
+.mat-header-cell{
+    font-weight: 700;
+    font-size: 1rem;
+}
+.row{
+    margin: 0px;
+}
