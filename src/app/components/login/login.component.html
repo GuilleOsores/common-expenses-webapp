@@ -1,0 +1,20 @@
+<div *ngIf="!newUser">
+  <h1>Login</h1>
+  <form id="formLogin" [formGroup]="formGroup" (ngSubmit)="onSubmit()">
+    <div class="row">
+      <mat-form-field>
+        <input matInput type="text" formControlName="user" placeholder="User">
+      </mat-form-field>
+    </div>
+    <div class="row">
+      <mat-form-field>
+        <input matInput type="pasword" formControlName="password" placeholder="Password">
+      </mat-form-field>
+    </div>
+    <div class="row">
+      <a (click)="newUser = !newUser">New user</a>
+    </div>
+    <button mat-raised-button color="primary" type="submit" value="Submit">Submit</button>
+  </form>
+</div>
+<app-auth-create *ngIf="newUser"></app-auth-create>

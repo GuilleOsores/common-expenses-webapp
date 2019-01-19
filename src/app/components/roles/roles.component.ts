@@ -2,12 +2,12 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MatTableDataSource } from '@angular/material';
 import { MatDialog } from '@angular/material';
-import { Subscription } from 'rxjs'
-
-import { Mode } from '../../utils/utils'
-
-import { RolesService } from '../../services';
+import { Subscription } from 'rxjs';
 import { Role } from 'common-expenses-libs/libs';
+
+import { Mode } from '../../utils/utils';
+
+import { RolesService, AuthService } from '../../services';
 import { RoleDetailComponent } from '../role-detail/role-detail.component'
 
 @Component({
@@ -18,14 +18,14 @@ import { RoleDetailComponent } from '../role-detail/role-detail.component'
 export class RolesComponent implements OnInit, OnDestroy {
 
   private mode: Mode;  
-  roles: MatTableDataSource<Role>;
-  selectedBuilding: any;
-  subscription: Subscription = new Subscription();
+  private roles: MatTableDataSource<Role>;
+  private subscription: Subscription = new Subscription();
   
-  displayedColumns: string[] = ['view', 'edit', 'delete', 'name'];
+  private displayedColumns: string[] = ['view', 'edit', 'delete', 'name'];
 
   constructor (
     private roleService: RolesService,
+    private authService: AuthService,
     private matDialog: MatDialog,
     private router: Router,
     private route: ActivatedRoute,

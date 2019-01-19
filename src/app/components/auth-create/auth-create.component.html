@@ -1,0 +1,23 @@
+<mat-card-title>Create User</mat-card-title>
+<form id="formCreateAuth" [formGroup]="formGroup" (ngSubmit)="onSubmit()">
+  <div class="continer">
+    <div class="row">
+      <mat-form-field>
+        <input matInput type="text" formControlName="userId" placeholder="Id">
+      </mat-form-field>
+    </div>
+    <div class="row">
+      <mat-form-field>
+        <input matInput type="text" formControlName="user" placeholder="user">
+      </mat-form-field>
+    </div>
+    <div class="row">
+      <mat-form-field>
+        <input matInput type="password" formControlName="password" placeholder="password">
+      </mat-form-field>
+    </div>
+    <div class="row">
+      <button mat-raised-button color="primary" type="submit" value="Submit">Submit</button>
+    </div>
+  </div>
+</form>

@@ -1,13 +1,13 @@
 <div class="container-fluid">
   <div class="row">
-    <button mat-icon-button (click)="sidenav.toggle()">
+    <button mat-icon-button (click)="sidenav.toggle()" *ngIf="!authService.needsLogin();">
       <mat-icon>menu</mat-icon>
     </button>        
     <router-outlet></router-outlet>      
   </div>
 </div>
 <mat-sidenav #sidenav role="navigation">
-  <app-sidenav (sidenavClose)="sidenav.close()"></app-sidenav>
+  <app-sidenav (sidenavClose)="sidenav.close()"  *ngIf="!authService.needsLogin();"></app-sidenav>
 </mat-sidenav>
 
 

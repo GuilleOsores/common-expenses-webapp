@@ -3,7 +3,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
-import { Mode } from '../../utils/utils'
+import { Mode } from '../../utils/utils';
 
 import { Invoice, Building, Service } from '../../classes';
 import { InvoiceService, ServicesService } from '../../services'

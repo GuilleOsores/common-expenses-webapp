@@ -7,7 +7,7 @@
   <ng-container matColumnDef="view" class="col-1">
     <th mat-header-cell *matHeaderCellDef></th>
     <td mat-cell *matCellDef="let element" matTooltip="View user">
-      <button mat-button (click)="viewUser(element)" *ngIf="permission && permission.action.read">
+      <button mat-button (click)="viewUser(element)" *ngIf="authService.canRead('Users');">
         <i class="material-icons">
           search
         </i>
@@ -18,7 +18,7 @@
   <ng-container matColumnDef="edit" class="col col-1">
     <th mat-header-cell *matHeaderCellDef></th>
     <td mat-cell *matCellDef="let element" matTooltip="Edit user">
-      <button mat-button (click)="editUser(element)" *ngIf="permission && permission.action.write">
+      <button mat-button (click)="editUser(element)" *ngIf="authService.canUpdate('Users');">
         <i class="material-icons">
           edit
         </i>
@@ -29,7 +29,7 @@
   <ng-container matColumnDef="delete" class="col-1">
     <th mat-header-cell *matHeaderCellDef></th>
     <td mat-cell *matCellDef="let element" matTooltip="Delete user">
-      <button mat-button (click)="deleteUser(element)" *ngIf="permission && permission.action.delete">
+      <button mat-button (click)="deleteUser(element)" *ngIf="authService.canDelete('Users');">
         <i class="material-icons">
           delete
         </i>
@@ -45,6 +45,6 @@
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
   <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 </table>
-<button mat-fab color="primary" (click)="createUser()" *ngIf="permission && permission.action.write" matTooltip="New user">
+<button mat-fab color="primary" (click)="createUser()" *ngIf="authService.canInsert('Users');" matTooltip="New user">
   <span style="font-size: 48px">+</span>
 </button>

@@ -9,6 +9,7 @@ import {
     RolesComponent,
     UsersComponent
 } from './components'
+import { LoginComponent } from './components/login/login.component';
  
 const routes: Routes = [
     {
@@ -34,6 +35,10 @@ const routes: Routes = [
     {
         path: 'users',
         component: UsersComponent,
+    },
+    {
+        path: 'login',
+        component: LoginComponent,
     }
 ]
 

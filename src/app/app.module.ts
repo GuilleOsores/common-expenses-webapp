@@ -24,6 +24,8 @@ import {
   BuildingsListComponent,
   SidenavComponent,
 } from './components';
+import { LoginComponent } from './components/login/login.component';
+import { AuthCreateComponent } from './components/auth-create/auth-create.component';
 
 @NgModule({
   declarations: [
@@ -42,6 +44,8 @@ import {
     RoleDetailComponent,
     UsersComponent,
     UsersDetailComponent,
+    LoginComponent,
+    AuthCreateComponent,
   ],
   imports: [
     BrowserModule,

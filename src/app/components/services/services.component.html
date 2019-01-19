@@ -3,22 +3,11 @@
 </mat-form-field>
 
 <table id="tableServices" mat-table [dataSource]="services" class="mat-elevation-z8 table table-striped">
-<!--
-  <ng-container matColumnDef="launch">
-    <th mat-header-cell *matHeaderCellDef></th>
-    <td mat-cell *matCellDef="let element" (click)="viewApartments(element.servicesId)" matTooltip="Open service">
-      <button mat-button>
-        <i class="material-icons">
-          launch
-        </i>
-      </button>
-    </td>
-  </ng-container>
--->
+
   <ng-container matColumnDef="view">
     <th mat-header-cell *matHeaderCellDef></th>
-    <td mat-cell *matCellDef="let element" (click)="viewService(element)" matTooltip="View service">
-      <button mat-button>
+    <td mat-cell *matCellDef="let element" matTooltip="View service">
+      <button mat-button (click)="viewService(element)" *ngIf="authService.canRead('Services');">
         <i class="material-icons" >
           search
         </i>
@@ -28,8 +17,8 @@
 
   <ng-container matColumnDef="edit">
     <th mat-header-cell *matHeaderCellDef></th>
-    <td mat-cell *matCellDef="let element" (click)="editService(element)" matTooltip="Edit service">
-      <button mat-button>
+    <td mat-cell *matCellDef="let element" matTooltip="Edit service">
+      <button mat-button (click)="editService(element)" *ngIf="authService.canUpdate('Services');">
         <i class="material-icons" >
           edit
         </i>
@@ -39,20 +28,15 @@
 
   <ng-container matColumnDef="delete">
     <th mat-header-cell *matHeaderCellDef></th>
-    <td mat-cell *matCellDef="let element" (click)="deleteService(element)" matTooltip="Delete service">
-      <button mat-button>
+    <td mat-cell *matCellDef="let element" matTooltip="Delete service">
+      <button mat-button (click)="deleteService(element)" *ngIf="authService.canDelete('Services');">
         <i class="material-icons" >
           delete
         </i>
       </button>
     </td>
   </ng-container>
-<!--
-  <ng-container matColumnDef="buildingsId">
-    <th mat-header-cell *matHeaderCellDef> Id </th>
-    <td mat-cell *matCellDef="let element" (click)="show(element.buildingsId)"> {{element.buildingsId}} </td>
-  </ng-container>
--->
+
   <ng-container matColumnDef="name">
     <th mat-header-cell *matHeaderCellDef> Name </th>
     <td mat-cell *matCellDef="let element"> {{element.name}} </td>
@@ -61,6 +45,6 @@
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
   <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 </table>
-<button mat-fab color="primary" (click)="createService()" matTooltip="New service">
+<button mat-fab color="primary" (click)="createService()" *ngIf="authService.canInsert('Services');" matTooltip="New service">
   <span style="font-size: 48px">+</span>
 </button>

@@ -7,7 +7,7 @@ import { Subscription } from 'rxjs'
 import { Mode } from '../../utils/utils'
 
 import { Apartment, Building} from '../../classes';
-import { BuildingService, ApartmentsService } from '../../services';
+import { BuildingService, ApartmentsService, AuthService } from '../../services';
 import { ApartmentDetailComponent } from '../apartment-detail/apartment-detail.component'
 
 
@@ -29,6 +29,7 @@ export class ApartmentsComponent implements OnInit, OnDestroy {
   constructor (
     private buildingService: BuildingService,
     private apartmentsService: ApartmentsService,
+    private authService: AuthService,
     private matDialog: MatDialog,
     private route: ActivatedRoute
   ) {

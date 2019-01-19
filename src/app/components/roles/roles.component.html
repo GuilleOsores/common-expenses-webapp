@@ -6,8 +6,8 @@
 
   <ng-container matColumnDef="view">
     <th mat-header-cell *matHeaderCellDef></th>
-    <td mat-cell *matCellDef="let element" (click)="viewRole(element)" matTooltip="View Role">
-      <button mat-button>
+    <td mat-cell *matCellDef="let element" matTooltip="View Role">
+      <button mat-button (click)="viewRole(element)" *ngIf="authService.canRead('Roles');">
         <i class="material-icons" >
           search
         </i>
@@ -17,8 +17,8 @@
 
   <ng-container matColumnDef="edit">
     <th mat-header-cell *matHeaderCellDef></th>
-    <td mat-cell *matCellDef="let element" (click)="editRole(element)" matTooltip="Edit role">
-      <button mat-button>
+    <td mat-cell *matCellDef="let element" matTooltip="Edit role">
+      <button mat-button (click)="editRole(element)" *ngIf="authService.canUpdate('Roles');">
         <i class="material-icons" >
           edit
         </i>
@@ -28,8 +28,8 @@
 
   <ng-container matColumnDef="delete">
     <th mat-header-cell *matHeaderCellDef></th>
-    <td mat-cell *matCellDef="let element" (click)="deleteRole(element)" matTooltip="Delete role">
-      <button mat-button>
+    <td mat-cell *matCellDef="let element" matTooltip="Delete role">
+      <button mat-button (click)="deleteRole(element)" *ngIf="authService.canDelete('Roles');">
         <i class="material-icons" >
           delete
         </i>
@@ -45,6 +45,6 @@
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
   <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 </table>
-<button mat-fab color="primary" (click)="createRole()" matTooltip="New role">
+<button mat-fab color="primary" (click)="createRole()" *ngIf="authService.canInsert('Roles');" matTooltip="New role">
   <span style="font-size: 48px">+</span>
 </button>

@@ -12,6 +12,10 @@ export const environment = {
     services: baseUrl + '/services',
     roles: baseUrl + '/roles',
     users: baseUrl + '/users',
+    auth: {
+      '/': baseUrl + '/auth',
+      authenticate : baseUrl + '/auth/authenticate'
+    } 
   }
 };
 
