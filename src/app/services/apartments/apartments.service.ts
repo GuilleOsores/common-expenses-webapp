@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators';
+import { Apartment } from 'common-expenses-libs/libs';
 
-import { environment } from '../../../environments/environment'
+import { environment } from '../../../environments/environment';
 
-import { Apartment } from '../../classes'
 
 @Injectable({
   providedIn: 'root'
