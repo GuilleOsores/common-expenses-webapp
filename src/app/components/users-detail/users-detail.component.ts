@@ -29,8 +29,9 @@ export class UsersDetailComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.formGroup = new FormGroup({
-     usersId: new FormControl( '' ),
+      usersId: new FormControl( '' ),
       name: new FormControl( '', Validators.required ),
+      lastName: new FormControl( '', Validators.required ),
       roles: new FormArray([])
     });
 

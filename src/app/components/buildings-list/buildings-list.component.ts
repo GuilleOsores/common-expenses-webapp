@@ -3,7 +3,7 @@ import { MatTableDataSource } from '@angular/material';
 import { Subscription } from 'rxjs';
 
 import { AuthService } from '../../services';
-import { Building, Permission } from 'common-expenses-libs/libs';
+import { Building } from 'common-expenses-libs/libs';
 
 @Component({
   selector: 'app-buildings-list',
@@ -25,21 +25,11 @@ export class BuildingsListComponent implements OnInit, OnChanges, OnDestroy {
   private mtdsBuildings: MatTableDataSource<Building> = new MatTableDataSource();
   private displayedColumns: string[] = ['launch', 'launchInvoices', 'view', 'edit', 'delete', 'name', 'address'];
   subscription: Subscription = new Subscription();
-  permission: Permission;
 
-  constructor(private authService: AuthService,) { }
+  constructor(private authService: AuthService) { }
 
   ngOnInit() {
     this.mtdsBuildings.data = this.buildings;
-
-    this.subscription.add(
-      this.authService.getPermission('Buildings').subscribe(
-        (permission) => {
-          (permission) => permission.program === 'Buildings'
-            this.permission = permission[0];
-        }
-      )
-    );
   }
 
   ngOnChanges() {

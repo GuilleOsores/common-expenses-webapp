@@ -12,6 +12,11 @@
       </mat-form-field>
     </div>
     <div class="row">
+      <mat-form-field>
+        <input matInput type="text" formControlName="lastName" placeholder="Lastname" [readonly]="data.mode === Mode.view || data.mode === Mode.delete">
+      </mat-form-field>
+    </div>
+    <div class="row">
       <div class="row">
         <div class="col col1">
           Roles

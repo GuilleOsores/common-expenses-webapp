@@ -1,96 +1,103 @@
 import { Injectable } from '@angular/core';
-
-import { RolesService } from '../roles/roles.service';
-import { Role, Permission, Action} from 'common-expenses-libs/libs';
+import { HttpClient } from '@angular/common/http';
 import { map, reduce, find, single } from 'rxjs/operators';
 import { pipe, of, Observable } from 'rxjs';
+
+import { RolesService } from '../roles/roles.service';
+import { Role, Permission, Action, User} from 'common-expenses-libs/libs';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
+  private loggedUser: User;
   private permission: Permission[];
-  private authenticated: boolean = false;
 
-  constructor(private rolesService: RolesService) {
-    //this.getPermission();
+  constructor(private rolesService: RolesService, private httpClient: HttpClient) {
+  }
+
+  createUser (userId: string, user: string, password: string) {
+    return this.httpClient.post(
+      environment.api.auth["/"],
+      {userId, user, password}
+    )
+    .pipe(
+      map(
+        (res: any) => {
+          this.loggedUser = res.Items[0];
+          this.getRoles(res.Items[0].roles);
+          return !!this.loggedUser;
+        }
+      )
+    )
   }
 
   needsLogin () : boolean {
-    return !this.authenticated;
+    return !this.loggedUser;
   }
 
-  login () {
-    this.authenticated = true;
-    return of(true);
+  login (user: string, password: string) {
+    return this.httpClient.post(
+      environment.api.auth.authenticate,
+      {user, password}
+    )
+    .pipe(
+      map(
+        (res: any) => {
+          this.loggedUser = res.Items[0];
+          this.getRoles(res.Items[0].roles);
+          return !!this.loggedUser;
+        }
+      )
+    )
   }
 
-  getPermission (program: string){
-    if(!this.permission){
-      this.permission = new Object() as Permission[];
-      return this.rolesService.getRoleById$('e0c1f020-1628-11e9-be6d-197c3ca23a05')
-      .pipe<Permission[]>(
-        map<Role, Permission[]>(
-          (role: Role) => role.permissions
-          )
+  getRoles (roles: string[]) {
+    for(const rolId of roles){
+      this.rolesService.getRoleById$(rolId)
+      .subscribe(
+        (rol) => {
+          const i = this.loggedUser.roles.findIndex( (_rolId: any) => rolId === _rolId );
+          this.loggedUser.roles[i] = rol;
+        }
       )
-      .pipe(
-        map(
-          (value) =>{
-            console.log(`sdwqe: ${JSON.stringify(value)}`)
-            this.permission= value;
-            return value;
-          }
-        )
-      )/*
-      .pipe(      
-        reduce((acc, val) => { console.log("odhsaod");return val })
-        /*
-        reduce(
-          (permission: Permission, permissions: Permission[], i: number) => {
-            console.log(`auth service devuelve permission: ${JSON.stringify(permission)}`)
-            if(permissions[i].program === program){
-              console.log(`auth service devuelve permission: ${JSON.stringify(permissions[i])}`)
-              //this.permission = permissions[i];
-              return permissions[i];
-            }
-            return null;
-          }
-      )
-      /*
-        single(
-          (value: Permission, index: number, source)  => {
-            console.log(`en single: ${JSON.stringify(value)}`)
-            console.log(`en single: ${JSON.stringify(index)}`)
-            console.log(`en single: ${typeof source}`)
-            return value.program === program
-          }
-        )
-        
-      )*/
-    }else{
-      return of(this.permission);
     }
   }
-/*
-  canOpen(){
-    return this.permission.action.open || false;
+
+  canOpen (program: string) {
+    return this.checkPermission(program, 'open');
   }
 
-  canRead(){
-    return this.permission.action.read || false;
+  canRead (program: string) {
+    return this.checkPermission(program, 'read');
   }
 
-  canInsert(){
-    return this.permission.action.write || false;
+  canInsert (program: string) {
+    return this.checkPermission(program, 'write');
   }
 
-  canUpdate(){
-    return this.permission.action.write || false;
+  canUpdate (program: string) {
+    return this.checkPermission(program, 'write');
   }
 
-  canDelete(){
-    return this.permission.action.delete || false;
-  }*/
+  canDelete (program: string) {
+    return this.checkPermission(program, 'delete');
+  }
+
+  private checkPermission (program: string, action: string) {
+    return this.loggedUser && this.loggedUser.roles
+    .reduce<boolean>(
+      (prev, curr, i, j) => {
+        if(!curr.permissions) return (prev || false);
+        const item = curr.permissions.find(
+          (permission) => {
+            return (permission.program === program);
+          });
+          return (prev || (item && item.action[action]));
+      },
+      false
+    );
+  }
 }

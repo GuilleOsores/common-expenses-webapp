@@ -1,13 +1,12 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
 import { MatTableDataSource } from '@angular/material';
 import { MatDialog } from '@angular/material';
-import { Subscription } from 'rxjs'
+import { Subscription } from 'rxjs';
 
-import { Mode } from '../../utils/utils'
+import { Mode } from '../../utils/utils';
 
 import { UsersService, AuthService } from '../../services';
-import { User, Permission } from 'common-expenses-libs/libs';
+import { User } from 'common-expenses-libs/libs';
 import { UsersDetailComponent } from '../users-detail/users-detail.component'
 
 @Component({
@@ -15,31 +14,19 @@ import { UsersDetailComponent } from '../users-detail/users-detail.component'
   templateUrl: './users.component.html',
   styleUrls: ['./users.component.css']
 })
-export class UsersComponent implements OnInit {
+export class UsersComponent implements OnInit, OnDestroy {
 
   private mode: Mode;  
-  users: MatTableDataSource<User>;
-  selectedBuilding: any;
-  subscription: Subscription = new Subscription();
-  permission: Permission;
+  private users: MatTableDataSource<User>;
+  private subscription: Subscription = new Subscription();
   
-  displayedColumns: string[] = ['view', 'edit', 'delete', 'name'];
+  private displayedColumns: string[] = ['view', 'edit', 'delete', 'name'];
 
   constructor (
     private usersService: UsersService,
     private authService: AuthService,
     private matDialog: MatDialog,
-    private router: Router,
-    private route: ActivatedRoute,
   ) {
-      this.authService.getPermission('Users').subscribe(
-        (permissions) => {console.log(`respuesta de permisos: ${JSON.stringify(permissions)}`)
-          this.permission = permissions.find(
-            (permission) => permission.program === 'Users'
-          );
-          //this.permission = permission[0];
-        }
-      );
     }
 
   ngOnInit () {

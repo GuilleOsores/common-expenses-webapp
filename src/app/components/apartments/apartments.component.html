@@ -7,8 +7,8 @@
     
     <ng-container matColumnDef="view">
       <th mat-header-cell *matHeaderCellDef></th>
-      <td mat-cell *matCellDef="let element" (click)="viewApartment(element)">
-        <button mat-button>
+      <td mat-cell *matCellDef="let element">
+        <button mat-button (click)="viewApartment(element)" *ngIf="authService.canRead('Apartments');">
           <i class="material-icons" >
             search
           </i>
@@ -18,8 +18,8 @@
   
     <ng-container matColumnDef="edit">
       <th mat-header-cell *matHeaderCellDef></th>
-      <td mat-cell *matCellDef="let element" (click)="editApartment(element)">
-        <button mat-button>
+      <td mat-cell *matCellDef="let element">
+        <button mat-button (click)="editApartment(element)" *ngIf="authService.canUpdate('Apartments');">
           <i class="material-icons" >
             edit
           </i>
@@ -29,8 +29,8 @@
   
     <ng-container matColumnDef="delete">
       <th mat-header-cell *matHeaderCellDef></th>
-      <td mat-cell *matCellDef="let element" (click)="deleteApartment(element)">
-        <button mat-button>
+      <td mat-cell *matCellDef="let element">
+        <button mat-button (click)="deleteApartment(element)" *ngIf="authService.canDelete('Apartments');">
           <i class="material-icons" >
             delete
           </i>
@@ -47,16 +47,11 @@
       <th mat-header-cell *matHeaderCellDef> Number </th>
       <td mat-cell *matCellDef="let element"> {{element.number}} </td>
     </ng-container>
-<!--  
-    <ng-container matColumnDef="address">
-      <th mat-header-cell *matHeaderCellDef> Address </th>
-      <td mat-cell *matCellDef="let element"> {{element.address}} </td>
-    </ng-container>
-  -->
+    
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
   </table>
-  <button mat-fab color="primary" (click)="createApartment()" matTooltip="New apartment">
+  <button mat-fab color="primary" (click)="createApartment()" *ngIf="authService.canInsert('Apartments');" matTooltip="New apartment">
     <span style="font-size: 48px">+</span>
   </button>
   

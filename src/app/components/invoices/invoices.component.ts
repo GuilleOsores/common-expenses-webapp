@@ -3,11 +3,11 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { MatTableDataSource } from '@angular/material';
 import { MatDialog } from '@angular/material';
 
-import { Mode } from '../../utils/utils'
+import { Mode } from '../../utils/utils';
 
-import { InvoiceService, BuildingService } from '../../services';
-import { Invoice, Building } from '../../classes';
-import { InvoicesDetailComponent } from '../invoices-detail/invoices-detail.component'
+import { InvoiceService, BuildingService, AuthService } from '../../services';
+import { Invoice, Building } from 'common-expenses-libs/libs';
+import { InvoicesDetailComponent } from '../invoices-detail/invoices-detail.component';
 
 @Component({
   selector: 'app-invoices',
@@ -26,6 +26,7 @@ export class InvoicesComponent implements OnInit {
   constructor (
     private buildingService: BuildingService,
     private invoiceService: InvoiceService,
+    private authService: AuthService,
     private matDialog: MatDialog,
     private router: Router,
     private route: ActivatedRoute,

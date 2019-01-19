@@ -2,11 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MatTableDataSource } from '@angular/material';
 import { MatDialog } from '@angular/material';
+import { Service } from 'common-expenses-libs/libs';
 
 import { Mode } from '../../utils/utils'
 
-import { ServicesService } from '../../services';
-import { Service } from '../../classes';
+import { ServicesService, AuthService } from '../../services';
 import { ServicesDetailComponent } from '../services-detail/services-detail.component'
 
 @Component({
@@ -24,6 +24,7 @@ export class ServicesComponent implements OnInit {
 
   constructor (
     private buildingService: ServicesService,
+    private authService: AuthService,
     private matDialog: MatDialog,
     private router: Router,
     private route: ActivatedRoute,

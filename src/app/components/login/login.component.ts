@@ -13,7 +13,8 @@ import { AuthService } from '../../services';
 })
 export class LoginComponent implements OnInit {
 
-  formGroup: FormGroup;
+  private formGroup: FormGroup;
+  private newUser: boolean;
 
   constructor (
     private authService: AuthService, 
@@ -30,15 +31,13 @@ export class LoginComponent implements OnInit {
 
   onSubmit () {
     if (this.formGroup.valid){
-      this.authService.login()
+      this.authService.login(
+        this.formGroup.value.user,
+        this.formGroup.value.password
+      )
       .subscribe(
-        loged => {
-          if(loged){
-            /*
-            this.router.navigate(['/'])
-            .then( console.log )
-            .catch(console.log);
-            */
+        logged => {
+          if(logged){
             this.dialogRef.close();
           }
         }
