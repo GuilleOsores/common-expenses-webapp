@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators';
+import { Invoice } from 'common-expenses-libs/libs';
 
-import { environment } from '../../../environments/environment'
-
-import { Invoice } from '../../classes';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
