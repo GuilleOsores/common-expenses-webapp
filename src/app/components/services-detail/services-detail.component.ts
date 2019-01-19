@@ -1,10 +1,11 @@
 import { Component, OnInit, OnDestroy, Input, Output, Inject } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { Subscription } from 'rxjs';
+import { Service } from 'common-expenses-libs/libs';
 
 import { Mode } from '../../utils/utils'
 
-import { Service } from '../../classes';
 import { ServicesService } from '../../services'
 
 @Component({
@@ -12,12 +13,11 @@ import { ServicesService } from '../../services'
   templateUrl: './services-detail.component.html',
   styleUrls: ['./services-detail.component.css']
 })
-export class ServicesDetailComponent implements OnInit {
+export class ServicesDetailComponent implements OnInit, OnDestroy {
 
   private formGroup: FormGroup;
-  private formControlId: FormControl;
-  private formControlName: FormControl;
   private Mode = Mode;
+  private subscription: Subscription = new Subscription();
 
   constructor(
     private buildingService: ServicesService,
@@ -27,37 +27,46 @@ export class ServicesDetailComponent implements OnInit {
 
   ngOnInit() {
     this.formGroup = new FormGroup({
-      servicesId: this.formControlId = new FormControl( '' ),
-      name: this.formControlName = new FormControl( '', Validators.required ),
+      servicesId: new FormControl( '' ),
+      name: new FormControl( '', Validators.required ),
     });
 
     if( !((<Mode>this.data.mode) === Mode.insert)){
       this.getServiceById(this.data.service.servicesId)
       .then( 
         (service) => {
-          this.formControlId.setValue(service.servicesId);
-          this.formControlName.setValue(service.name);
+          for (const prop in service){
+            if (this.formGroup.controls[prop]){
+              this.formGroup.controls[prop].setValue(service[prop]);
+            }
+          }
         }
       );
     }    
   }
 
+  ngOnDestroy () {
+    this.subscription.unsubscribe();
+  }
+
   getServiceById = (id: any): Promise<Service> => {
     return new Promise(
       (resolve, reject) => {
-        this.buildingService.getServiceById$(id)
-        .subscribe(
-          (service) => {
-            if(service)
-              resolve(service);
-            else
-              reject('Building not found');
-          },
-          error => {
-            console.log(error);
-            reject(error);
-          }
-        );
+        this.subscription.add(
+          this.buildingService.getServiceById$(id)
+          .subscribe(
+            (service) => {
+              if(service)
+                resolve(service);
+              else
+                reject('Building not found');
+            },
+            error => {
+              console.log(error);
+              reject(error);
+            }
+          )
+        )
       }
     )    
   }
@@ -88,11 +97,13 @@ export class ServicesDetailComponent implements OnInit {
   newService (): Promise<Service> {
     return new Promise(
       (resolve, reject) => {
-        this.buildingService.newService$(this.formGroup.value)
-        .subscribe(
-          resolve,
-          reject
-        );
+        this.subscription.add(
+          this.buildingService.newService$(this.formGroup.value)
+          .subscribe(
+            resolve,
+            reject
+          )
+        )
       }
     )
   }
@@ -100,11 +111,13 @@ export class ServicesDetailComponent implements OnInit {
   updateService (): Promise<Service> {
     return new Promise(
       (resolve, reject) => {
-        this.buildingService.updateService$(this.formGroup.value)
-        .subscribe(
-          resolve,
-          reject
-        );
+        this.subscription.add(
+          this.buildingService.updateService$(this.formGroup.value)
+          .subscribe(
+            resolve,
+            reject
+          )
+        )
       }
     )
   }
@@ -112,11 +125,13 @@ export class ServicesDetailComponent implements OnInit {
   deleteService (): Promise<Service> {
     return new Promise(
       (resolve, reject) => {
-        this.buildingService.deleteService$(this.data.service.servicesId)
-        .subscribe(
-          resolve,
-          reject
-        );
+        this.subscription.add(
+          this.buildingService.deleteService$(this.data.service.servicesId)
+          .subscribe(
+            resolve,
+            reject
+          )
+        )
       }
     )
   }

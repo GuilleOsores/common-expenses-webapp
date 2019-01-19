@@ -1,14 +1,13 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-
-import { MatDialog } from '@angular/material';
 import { Subscription } from 'rxjs'
+import { MatDialog } from '@angular/material';
+import { Building } from 'common-expenses-libs/libs';
 
 import { Mode } from '../../utils/utils'
-
 import { BuildingService } from '../../services';
-import { Building } from 'common-expenses-libs/libs';
 import { BuildingDetailComponent } from '../building-detail/building-detail.component'
+
 
 @Component({
   selector: 'app-buildings',
@@ -19,8 +18,7 @@ export class BuildingsComponent implements OnInit, OnDestroy {
 
   private mode: Mode;
   private filter: string;
-  buildings: Array<Building> = new Array<Building>(); //Observable<Building[]> = new Observable();
-  selectedBuilding: any;
+  private buildings: Array<Building> = new Array<Building>();
   subscription: Subscription = new Subscription();
 
   constructor (
@@ -45,7 +43,6 @@ export class BuildingsComponent implements OnInit, OnDestroy {
   }
 
   getBuildings = () => {
-    
     const subscription = this.buildingService.getBuildings$()
     .subscribe(
       (buildings) => { this.buildings = buildings; },
@@ -55,24 +52,22 @@ export class BuildingsComponent implements OnInit, OnDestroy {
   }
 
   createBuilding = () => {
-    const dialogRef = this.matDialog.open(
+    const subscription = this.matDialog.open(
       BuildingDetailComponent,
       {
         data: {
           mode: Mode.insert
         }
       }
-    );
-
-    dialogRef.afterClosed().subscribe(
-      this.getBuildings
     )
+    .afterClosed().subscribe(
+      this.getBuildings
+    );
+    this.subscription.add(subscription);
   }
 
   editBuilding = (building: Building) => {
-    console.dir("llego a buildings: ", building);
-    
-    const dialogRef = this.matDialog.open(
+    const subscription = this.matDialog.open(
       BuildingDetailComponent,
       {
         data: {
@@ -80,14 +75,15 @@ export class BuildingsComponent implements OnInit, OnDestroy {
           building: building
         }
       }
-    );
-    dialogRef.afterClosed().subscribe(
-      this.getBuildings
     )
+    .afterClosed().subscribe(
+      this.getBuildings
+    );
+    this.subscription.add(subscription);
   }
 
   deleteBuilding = (building) => {
-    const dialogRef = this.matDialog.open(
+    const subscription = this.matDialog.open(
       BuildingDetailComponent,
       {
         data: {
@@ -95,14 +91,15 @@ export class BuildingsComponent implements OnInit, OnDestroy {
           building: building
         }
       }
-    );
-    dialogRef.afterClosed().subscribe(
-      this.getBuildings
     )
+    .afterClosed().subscribe(
+      this.getBuildings
+    );
+    this.subscription.add(subscription);
   }
 
   viewBuilding = (building) => {
-    const dialogRef = this.matDialog.open(
+    this.matDialog.open(
       BuildingDetailComponent,
       {
         data: {

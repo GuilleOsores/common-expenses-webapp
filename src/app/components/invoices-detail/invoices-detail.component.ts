@@ -2,10 +2,9 @@ import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { Invoice, Building, Service } from 'common-expenses-libs/libs';
 
 import { Mode } from '../../utils/utils';
-
-import { Invoice, Building, Service } from '../../classes';
 import { InvoiceService, ServicesService } from '../../services'
 
 @Component({
@@ -16,13 +15,6 @@ import { InvoiceService, ServicesService } from '../../services'
 export class InvoicesDetailComponent implements OnInit, OnDestroy {
 
   private formGroup: FormGroup;
-  private formControlId: FormControl;
-  private formControlYear: FormControl;
-  private formControlMonth: FormControl;
-  private formControlAmmount: FormControl;
-  private formControlDueDate: FormControl;
-  private formControlPaidDate: FormControl;
-  private formControlService: FormControl;
   private Mode = Mode;
   private invoice: Invoice;
   private building: Building;
@@ -41,13 +33,13 @@ export class InvoicesDetailComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.formGroup = new FormGroup({
-      invoicesId: this.formControlId = new FormControl( '' ),
-      year: this.formControlYear = new FormControl( '', [Validators.required, Validators.min(2018)] ),
-      month: this.formControlMonth = new FormControl( '', [Validators.required, Validators.min(1), Validators.max(12)] ),
-      ammount: this.formControlAmmount = new FormControl( '', Validators.required ),
-      dueDate: this.formControlDueDate = new FormControl( {value: '', disabled: true}, Validators.required ),
-      paidDate: this.formControlPaidDate = new FormControl( {value: '', disabled: true} ),
-      service: this.formControlService = new FormControl( '' ),
+      invoicesId: new FormControl( '' ),
+      year: new FormControl( '', [Validators.required, Validators.min(2018)] ),
+      month: new FormControl( '', [Validators.required, Validators.min(1), Validators.max(12)] ),
+      ammount: new FormControl( '', Validators.required ),
+      dueDate: new FormControl( {value: '', disabled: true}, Validators.required ),
+      paidDate: new FormControl( {value: '', disabled: true} ),
+      service: new FormControl( '' ),
     });
 
     this.subscription.add(
@@ -60,14 +52,11 @@ export class InvoicesDetailComponent implements OnInit, OnDestroy {
     if( !((<Mode>this.data.mode) === Mode.insert)){
       this.getInvoiceById()
       .then( 
-        (invoice) => {          
-          this.formControlId.setValue(invoice.invoicesId);
-          this.formControlYear.setValue(invoice.year);
-          this.formControlMonth.setValue(invoice.month);
-          this.formControlAmmount.setValue(invoice.ammount);
-          this.formControlDueDate.setValue(invoice.dueDate);
-          this.formControlPaidDate.setValue(invoice.paidDate);
-          this.formControlService.setValue(invoice.service);
+        (invoice) => {
+          for (const prop in invoice){
+            if (this.formGroup.controls[prop])
+              this.formGroup.controls[prop].setValue(invoice[prop]);
+          }          
         }
       );
     }    
@@ -118,7 +107,9 @@ export class InvoicesDetailComponent implements OnInit, OnDestroy {
     }else{
       for( const control in this.formGroup.controls ){
         if( this.formGroup.controls[control].errors ){
-          for ( const error in this.formGroup.controls[control].errors) console.error(`Error: ${this.formGroup.controls[control].errors[error]}`)
+          const errors = this.formGroup.controls[control].errors;
+          for ( const error in errors)
+            console.error(`Error: ${errors[error]}`)
         }
       }      
     }
@@ -131,11 +122,13 @@ export class InvoicesDetailComponent implements OnInit, OnDestroy {
   newInvoice (): Promise<Invoice> {
     return new Promise(
       (resolve, reject) => {
-        this.invoiceService.newInvoice$(this.building.buildingsId, this.formGroup.value)
-        .subscribe(
-          resolve,
-          reject
-        );
+        this.subscription.add(
+          this.invoiceService.newInvoice$(this.building.buildingsId, this.formGroup.value)
+          .subscribe(
+            resolve,
+            reject
+          )
+        )
       }
     )
   }
@@ -143,11 +136,13 @@ export class InvoicesDetailComponent implements OnInit, OnDestroy {
   updateInvoice (): Promise<Invoice> {
     return new Promise(
       (resolve, reject) => {
-        this.invoiceService.updateInvoice$(this.building.buildingsId, this.formGroup.value)
-        .subscribe(
-          resolve,
-          reject
-        );
+        this.subscription.add(
+          this.invoiceService.updateInvoice$(this.building.buildingsId, this.formGroup.value)
+          .subscribe(
+            resolve,
+            reject
+          )
+        )
       }
     )
   }
@@ -155,11 +150,13 @@ export class InvoicesDetailComponent implements OnInit, OnDestroy {
   deleteInvoice (): Promise<Invoice> {
     return new Promise(
       (resolve, reject) => {
-        this.invoiceService.deleteInvoice$(this.building.buildingsId, this.invoice.invoicesId)
-        .subscribe(
-          resolve,
-          reject
-        );
+        this.subscription.add(
+          this.invoiceService.deleteInvoice$(this.building.buildingsId, this.invoice.invoicesId)
+          .subscribe(
+            resolve,
+            reject
+          )
+        )
       }
     )
   }

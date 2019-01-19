@@ -1,12 +1,11 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { MatTableDataSource } from '@angular/material';
-import { MatDialog } from '@angular/material';
+import { MatTableDataSource, MatDialog } from '@angular/material';
 import { Subscription } from 'rxjs'
+import { Apartment, Building} from 'common-expenses-libs/libs';
 
 import { Mode } from '../../utils/utils'
 
-import { Apartment, Building} from '../../classes';
 import { BuildingService, ApartmentsService, AuthService } from '../../services';
 import { ApartmentDetailComponent } from '../apartment-detail/apartment-detail.component'
 
@@ -33,12 +32,14 @@ export class ApartmentsComponent implements OnInit, OnDestroy {
     private matDialog: MatDialog,
     private route: ActivatedRoute
   ) {
-    route.params.subscribe(
-      params => {
-        console.log('parametros', JSON.stringify(params));
-        this.buildingId = params.buildingId;
-      }
-    );
+    this.subscription.add(
+      route.params.subscribe(
+        params => {
+          console.log('parametros', JSON.stringify(params));
+          this.buildingId = params.buildingId;
+        }
+      )
+    )
   }
 
   ngOnInit () {
@@ -82,8 +83,8 @@ export class ApartmentsComponent implements OnInit, OnDestroy {
     this.subscription.add(subscription);
   }
 
-  createApartment = () => {
-    const dialogRef = this.matDialog.open(
+  createApartment = () => {    
+    const subscription = this.matDialog.open(
       ApartmentDetailComponent,
       {
         data: {
@@ -91,22 +92,15 @@ export class ApartmentsComponent implements OnInit, OnDestroy {
           building: this.building
         }
       }
-    );
-
-    dialogRef.afterClosed().subscribe(
-      this.getApartments,
-      /*
-      (apartment) => {
-        console.log('el dialog devolvio::::');
-        console.log(JSON.stringify(apartment));
-        this.buildings.data.push(building);
-        this.buildings.filter = this.buildings.filter;
-      }*/
     )
+    .afterClosed().subscribe(
+      this.getApartments,
+    );
+    this.subscription.add(subscription);
   }
 
   editApartment = (apartment) => {
-    const dialogRef = this.matDialog.open(
+    const subscription = this.matDialog.open(
       ApartmentDetailComponent,
       {
         data: {
@@ -115,21 +109,15 @@ export class ApartmentsComponent implements OnInit, OnDestroy {
           apartment: apartment
         }
       }
-    );
-    dialogRef.afterClosed().subscribe(
-      this.getApartments,
-      /*
-      (apartment) => {
-        console.log('el dialog devolvio::::');
-        console.log(JSON.stringify(apartment));
-        this.buildings.data.push(building);
-        this.buildings.filter = this.buildings.filter;
-      }*/
     )
+    .afterClosed().subscribe(
+      this.getApartments,
+    );
+    this.subscription.add(subscription);
   }
 
   deleteApartment = (apartment) => {
-    const dialogRef = this.matDialog.open(
+    const subscription = this.matDialog.open(
       ApartmentDetailComponent,
       {
         data: {
@@ -138,21 +126,15 @@ export class ApartmentsComponent implements OnInit, OnDestroy {
           apartment: apartment
         }
       }
-    );
-    dialogRef.afterClosed().subscribe(
-      this.getApartments,
-      /*
-      (apartment) => {
-        console.log('el dialog devolvio::::');
-        console.log(JSON.stringify(apartment));
-        this.buildings.data.push(building);
-        this.buildings.filter = this.buildings.filter;
-      }*/
     )
+    .afterClosed().subscribe(
+      this.getApartments,    
+    );
+    this.subscription.add(subscription);
   }
 
   viewApartment = (apartment) => {
-    const dialogRef = this.matDialog.open(
+    const subscription = this.matDialog.open(
       ApartmentDetailComponent,
       {
         data: {
@@ -161,17 +143,11 @@ export class ApartmentsComponent implements OnInit, OnDestroy {
           apartment: apartment
         }
       }
-    );
-    dialogRef.afterClosed().subscribe(
-      this.getApartments,
-      /*
-      (apartment) => {
-        console.log('el dialog devolvio::::');
-        console.log(JSON.stringify(apartment));
-        this.buildings.data.push(building);
-        this.buildings.filter = this.buildings.filter;
-      }*/
     )
+    .afterClosed().subscribe(
+      this.getApartments,
+    );
+    this.subscription.add(subscription);
   }
 
 }

@@ -1,25 +1,27 @@
-import { Component, OnInit } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { MatTableDataSource } from '@angular/material';
 import { MatDialog } from '@angular/material';
+import { Subscription } from 'rxjs';
+import { Invoice, Building } from 'common-expenses-libs/libs';
 
 import { Mode } from '../../utils/utils';
-
 import { InvoiceService, BuildingService, AuthService } from '../../services';
-import { Invoice, Building } from 'common-expenses-libs/libs';
 import { InvoicesDetailComponent } from '../invoices-detail/invoices-detail.component';
+
 
 @Component({
   selector: 'app-invoices',
   templateUrl: './invoices.component.html',
   styleUrls: ['./invoices.component.css']
 })
-export class InvoicesComponent implements OnInit {
+export class InvoicesComponent implements OnInit, OnDestroy {
 
   private buildingId: string;
   private building: Building;
   private mode: Mode;  
-  invoices: MatTableDataSource<Invoice>;
+  private invoices: MatTableDataSource<Invoice>;
+  private subscription: Subscription = new Subscription();
   
   displayedColumns: string[] = ['view', 'edit', 'delete', 'year', 'month', 'ammount', 'dueDate', 'paidDate'];
 
@@ -28,14 +30,15 @@ export class InvoicesComponent implements OnInit {
     private invoiceService: InvoiceService,
     private authService: AuthService,
     private matDialog: MatDialog,
-    private router: Router,
     private route: ActivatedRoute,
   ) {
-    route.params.subscribe(
-      params => {
-        this.buildingId = params.buildingId;
-      }
-    );
+    this.subscription.add(
+      route.params.subscribe(
+        params => {
+          this.buildingId = params.buildingId;
+        }
+      )
+    )
   }
 
   ngOnInit () {
@@ -49,13 +52,19 @@ export class InvoicesComponent implements OnInit {
     .catch(console.log);
   }
 
+  ngOnDestroy () {
+    this.subscription.unsubscribe();
+  }
+
   getBuilding = () => {
     return new Promise<Building>(
       (resolve, reject) => {
-        this.buildingService.getBuildingById$(this.buildingId)
-        .subscribe(
-          resolve,
-          reject
+        this.subscription.add(
+          this.buildingService.getBuildingById$(this.buildingId)
+          .subscribe(
+            resolve,
+            reject
+          )
         )
       }
     )    
@@ -66,15 +75,17 @@ export class InvoicesComponent implements OnInit {
   }
 
   getInvoices = () => {
-    this.invoiceService.getInvoices$(this.buildingId)
-    .subscribe(
-      (invoices) => { this.invoices = new MatTableDataSource(invoices); },
-      error => {console.log('error::::');  console.log(error); }
+    this.subscription.add(
+      this.invoiceService.getInvoices$(this.buildingId)
+      .subscribe(
+        (invoices) => { this.invoices = new MatTableDataSource(invoices); },
+        error => {console.log('error::::');  console.log(error); }
+      )
     )
   }
 
   createInvoice = () => {
-    const dialogRef = this.matDialog.open(
+    const subscription = this.matDialog.open(
       InvoicesDetailComponent,
       {
         data: {
@@ -82,15 +93,15 @@ export class InvoicesComponent implements OnInit {
           building: this.building
         }
       }
-    );
-
-    dialogRef.afterClosed().subscribe(
-      this.getInvoices
     )
+    .afterClosed().subscribe(
+      this.getInvoices
+    );
+    this.subscription.add(subscription);
   }
 
   editInvoice = (invoice) => {
-    const dialogRef = this.matDialog.open(
+    const subscription = this.matDialog.open(
       InvoicesDetailComponent,
       {
         data: {
@@ -99,14 +110,15 @@ export class InvoicesComponent implements OnInit {
           invoice
         }
       }
-    );
-    dialogRef.afterClosed().subscribe(
-      this.getInvoices
     )
+    .afterClosed().subscribe(
+      this.getInvoices
+    );
+    this.subscription.add(subscription);
   }
 
   deleteInvoice = (invoice) => {
-    const dialogRef = this.matDialog.open(
+    const subscription = this.matDialog.open(
       InvoicesDetailComponent,
       {
         data: {
@@ -115,14 +127,15 @@ export class InvoicesComponent implements OnInit {
           invoice
         }
       }
-    );
-    dialogRef.afterClosed().subscribe(
-      this.getInvoices
     )
+    .afterClosed().subscribe(
+      this.getInvoices
+    );
+    this.subscription.add(subscription);
   }
 
   viewInvoice = (invoice) => {
-    const dialogRef = this.matDialog.open(
+    this.matDialog.open(
       InvoicesDetailComponent,
       {
         data: {

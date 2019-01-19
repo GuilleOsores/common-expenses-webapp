@@ -1,24 +1,23 @@
-import { Component, OnInit, OnDestroy, Input, Output, Inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
 import { FormGroup, FormControl, Validators, FormArray } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { Subscription } from 'rxjs';
+import { Role } from 'common-expenses-libs/libs';
 
 import { Mode } from '../../utils/utils'
-
-import { Role, Permission} from 'common-expenses-libs/libs';
 import { RolesService } from '../../services';
-import { Action } from 'rxjs/internal/scheduler/Action';
 
 @Component({
   selector: 'app-role-detail',
   templateUrl: './role-detail.component.html',
   styleUrls: ['./role-detail.component.css']
 })
-export class RoleDetailComponent implements OnInit {
+export class RoleDetailComponent implements OnInit, OnDestroy {
 
   private formGroup: FormGroup;
   private Mode = Mode;
-  private permisionRow: number = 0;
   private role: Role;
+  private subscription: Subscription = new Subscription();
 
   constructor(
     private rolesService: RolesService,
@@ -47,13 +46,9 @@ export class RoleDetailComponent implements OnInit {
           for( const prop in role ){
             if( this.formGroup.controls[prop] ){
               if(prop === 'permissions'){
-                console.log(`en if(prop === 'permissions'){`);
                 const permisionsArray = <FormArray>this.formGroup.controls['permissions'];
                 role.permissions.forEach(
                   (permission) => {
-                    console.log(`permission.foreach: ${JSON.stringify(permission)}`);  
-                    const actionsArray =  new FormArray([]);
-
                     permisionsArray.push(
                       new FormGroup({
                         program: new FormControl(permission.program, Validators.required),
@@ -77,22 +72,28 @@ export class RoleDetailComponent implements OnInit {
     }    
   }
 
+  ngOnDestroy () {
+    this.subscription.unsubscribe();
+  }
+
   getRoleById = (id: any): Promise<Role> => {
     return new Promise(
       (resolve, reject) => {
-        this.rolesService.getRoleById$(id)
-        .subscribe(
-          (role) => {
-            if(role)
-              resolve(role);
-            else
-              reject('Role not found');
-          },
-          error => {
-            console.log(error);
-            reject(error);
-          }
-        );
+        this.subscription.add(
+          this.rolesService.getRoleById$(id)
+          .subscribe(
+            (role) => {
+              if(role)
+                resolve(role);
+              else
+                reject('Role not found');
+            },
+            error => {
+              console.log(error);
+              reject(error);
+            }
+          )
+        )
       }
     )    
   }
@@ -139,11 +140,13 @@ export class RoleDetailComponent implements OnInit {
     this.deleteProgramsWithoutPermissions();
     return new Promise(
       (resolve, reject) => {
-        this.rolesService.newRole$(this.formGroup.value)
-        .subscribe(
-          resolve,
-          reject
-        );
+        this.subscription.add(
+          this.rolesService.newRole$(this.formGroup.value)
+          .subscribe(
+            resolve,
+            reject
+          )
+        )
       }
     )
   }
@@ -151,12 +154,14 @@ export class RoleDetailComponent implements OnInit {
   updateRole (): Promise<Role> | any {
     this.deleteProgramsWithoutPermissions();
     return new Promise(
-      (resolve, reject) => {console.log("this.formGroup.value: "); console.dir(this.formGroup.value);
-        this.rolesService.updateRole$(this.formGroup.value)
-        .subscribe(
-          resolve,
-          reject
-        );
+      (resolve, reject) => {
+        this.subscription.add(
+          this.rolesService.updateRole$(this.formGroup.value)
+          .subscribe(
+            resolve,
+            reject
+          )
+        )
       }
     )
   }
@@ -190,11 +195,13 @@ export class RoleDetailComponent implements OnInit {
   deleteRole (): Promise<Role> {
     return new Promise(
       (resolve, reject) => {
-        this.rolesService.deleteRole$(this.formGroup.value.rolesId)
-        .subscribe(
-          resolve,
-          reject
-        );
+        this.subscription.add(
+          this.rolesService.deleteRole$(this.formGroup.value.rolesId)
+          .subscribe(
+            resolve,
+            reject
+          )
+        )
       }
     )
   }

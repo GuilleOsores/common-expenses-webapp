@@ -2,11 +2,11 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MatTableDataSource } from '@angular/material';
 import { MatDialog } from '@angular/material';
 import { Subscription } from 'rxjs';
+import { User } from 'common-expenses-libs/libs';
 
 import { Mode } from '../../utils/utils';
 
 import { UsersService, AuthService } from '../../services';
-import { User } from 'common-expenses-libs/libs';
 import { UsersDetailComponent } from '../users-detail/users-detail.component'
 
 @Component({
@@ -52,22 +52,22 @@ export class UsersComponent implements OnInit, OnDestroy {
   }
 
   createUser = () => {
-    const dialogRef = this.matDialog.open(
+    const subscription = this.matDialog.open(
       UsersDetailComponent,
       {
         data: {
           mode: Mode.insert
         }
       }
-    );
-
-    dialogRef.afterClosed().subscribe(
-      this.getUsers
     )
+    .afterClosed().subscribe(
+      this.getUsers
+    );
+    this.subscription.add(subscription);
   }
 
   editUser = (user) => {
-    const dialogRef = this.matDialog.open(
+    const subscription = this.matDialog.open(
       UsersDetailComponent,
       {
         data: {
@@ -75,15 +75,15 @@ export class UsersComponent implements OnInit, OnDestroy {
           user
         }
       }
-    );
-
-    dialogRef.afterClosed().subscribe(
-      this.getUsers
     )
+    .afterClosed().subscribe(
+      this.getUsers
+    );
+    this.subscription.add(subscription);
   }
 
   deleteUser = (user) => {
-    const dialogRef = this.matDialog.open(
+    const subscription = this.matDialog.open(
       UsersDetailComponent,
       {
         data: {
@@ -91,15 +91,15 @@ export class UsersComponent implements OnInit, OnDestroy {
           user
         }
       }
-    );
-
-    dialogRef.afterClosed().subscribe(
-      this.getUsers
     )
+    .afterClosed().subscribe(
+      this.getUsers
+    );
+    this.subscription.add(subscription);
   }
 
   viewUser = (user) => {
-    const dialogRef = this.matDialog.open(
+    this.matDialog.open(
       UsersDetailComponent,
       {
         data: {

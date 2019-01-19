@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MatTableDataSource } from '@angular/material';
 import { MatDialog } from '@angular/material';
+import { Subscription } from 'rxjs';
 import { Service } from 'common-expenses-libs/libs';
 
 import { Mode } from '../../utils/utils'
@@ -14,11 +15,11 @@ import { ServicesDetailComponent } from '../services-detail/services-detail.comp
   templateUrl: './services.component.html',
   styleUrls: ['./services.component.css']
 })
-export class ServicesComponent implements OnInit {
+export class ServicesComponent implements OnInit, OnDestroy {
 
   private mode: Mode;  
   services: MatTableDataSource<Service>;
-  selectedService: any;
+  private subscription: Subscription = new Subscription();
   
   displayedColumns: string[] = ['view', 'edit', 'delete', 'name'];
 
@@ -26,12 +27,14 @@ export class ServicesComponent implements OnInit {
     private buildingService: ServicesService,
     private authService: AuthService,
     private matDialog: MatDialog,
-    private router: Router,
-    private route: ActivatedRoute,
   ) {  }
 
   ngOnInit () {
     this.getServices();
+  }
+
+  ngOnDestroy () {
+    this.subscription.unsubscribe();
   }
 
   applyFilter (filter: string){
@@ -39,37 +42,32 @@ export class ServicesComponent implements OnInit {
   }
 
   getServices = () => {
-    this.buildingService.getServices$()
-    .subscribe(
-      (services) => { this.services = new MatTableDataSource(services); },
-      error => {console.log('error::::');  console.log(error); }
+    this.subscription.add(
+      this.buildingService.getServices$()
+      .subscribe(
+        (services) => { this.services = new MatTableDataSource(services); },
+        error => {console.log('error::::');  console.log(error); }
+      )
     )
   }
 
   createService = () => {
-    const dialogRef = this.matDialog.open(
+    const subscription = this.matDialog.open(
       ServicesDetailComponent,
       {
         data: {
           mode: Mode.insert
         }
       }
-    );
-
-    dialogRef.afterClosed().subscribe(
-      this.getServices
-      /*
-      (building) => {
-        console.log('el dialog devolvio::::');
-        console.log(JSON.stringify(building));
-        this.buildings.data.push(building);
-        this.buildings.filter = this.buildings.filter;
-      }*/
     )
+    .afterClosed().subscribe(
+      this.getServices
+    );
+    this.subscription.add(subscription);
   }
 
   editService = (service) => {
-    const dialogRef = this.matDialog.open(
+    const subscription = this.matDialog.open(
       ServicesDetailComponent,
       {
         data: {
@@ -77,21 +75,15 @@ export class ServicesComponent implements OnInit {
           service
         }
       }
-    );
-    dialogRef.afterClosed().subscribe(
-      this.getServices
-      /*
-      (building: Building) => {
-        console.log('el dialog devolvio::::');
-        console.log(JSON.stringify(building));
-        this.buildings.data.push(building);
-        this.buildings.filter = this.buildings.filter;
-      }*/
     )
+    .afterClosed().subscribe(
+      this.getServices
+    );
+    this.subscription.add(subscription);
   }
 
   deleteService = (service) => {
-    const dialogRef = this.matDialog.open(
+    const subscription = this.matDialog.open(
       ServicesDetailComponent,
       {
         data: {
@@ -99,21 +91,15 @@ export class ServicesComponent implements OnInit {
           service
         }
       }
-    );
-    dialogRef.afterClosed().subscribe(
-      this.getServices
-      /*
-      (building) => {
-        console.log('el dialog devolvio:::::');
-        console.log(JSON.stringify(building));        
-        this.buildings.data.push(building);
-        this.buildings.filter = this.buildings.filter;
-      }*/
     )
+    .afterClosed().subscribe(
+      this.getServices
+    );
+    this.subscription.add(subscription);
   }
 
   viewService = (service) => {
-    const dialogRef = this.matDialog.open(
+    this.matDialog.open(
       ServicesDetailComponent,
       {
         data: {

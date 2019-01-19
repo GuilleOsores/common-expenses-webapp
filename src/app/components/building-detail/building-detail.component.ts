@@ -1,10 +1,11 @@
-import { Component, OnInit, OnDestroy, Input, Output, Inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { Subscription } from 'rxjs';
+import { Building } from 'common-expenses-libs/libs';
 
 import { Mode } from '../../utils/utils'
 
-import { Building } from '../../classes';
 import { BuildingService } from '../../services'
 
 @Component({
@@ -12,16 +13,11 @@ import { BuildingService } from '../../services'
   templateUrl: './building-detail.component.html',
   styleUrls: ['./building-detail.component.css']
 })
-export class BuildingDetailComponent implements OnInit {
+export class BuildingDetailComponent implements OnInit, OnDestroy {
 
   private formGroup: FormGroup;
-  /*
-  private formControlId: FormControl;
-  private formControlName: FormControl;
-  private formControlAddress: FormControl;
-  private formControlAddress: FormControl;
-  */
   private Mode = Mode;
+  private subscription: Subscription= new Subscription();
 
   constructor(
     private buildingService: BuildingService,
@@ -50,23 +46,29 @@ export class BuildingDetailComponent implements OnInit {
       );
     }    
   }
+  
+  ngOnDestroy () {
+    this.subscription.unsubscribe();
+  }
 
   getBuildingById = (id: any): Promise<Building> => {
     return new Promise(
       (resolve, reject) => {
-        this.buildingService.getBuildingById$(id)
-        .subscribe(
-          (building) => {
-            if(building)
-              resolve(building);
-            else
-              reject('Building not found');
-          },
-          error => {
-            console.log(error);
-            reject(error);
-          }
-        );
+        this.subscription.add(
+          this.buildingService.getBuildingById$(id)
+          .subscribe(
+            (building) => {
+              if(building)
+                resolve(building);
+              else
+                reject('Building not found');
+            },
+            error => {
+              console.log(error);
+              reject(error);
+            }
+          )
+        )
       }
     )    
   }
@@ -97,11 +99,13 @@ export class BuildingDetailComponent implements OnInit {
   newBuilding (): Promise<Building> {
     return new Promise(
       (resolve, reject) => {
-        this.buildingService.newBuilding$(this.formGroup.value)
-        .subscribe(
-          resolve,
-          reject
-        );
+        this.subscription.add(
+          this.buildingService.newBuilding$(this.formGroup.value)
+          .subscribe(
+            resolve,
+            reject
+          )
+        )
       }
     )
   }
@@ -109,11 +113,13 @@ export class BuildingDetailComponent implements OnInit {
   updateBuilding (): Promise<Building> {
     return new Promise(
       (resolve, reject) => {
-        this.buildingService.updateBuilding$(this.formGroup.value)
-        .subscribe(
-          resolve,
-          reject
-        );
+        this.subscription.add(
+          this.buildingService.updateBuilding$(this.formGroup.value)
+          .subscribe(
+            resolve,
+            reject
+          )
+        )
       }
     )
   }
@@ -121,11 +127,13 @@ export class BuildingDetailComponent implements OnInit {
   deleteBuilding (): Promise<Building> {
     return new Promise(
       (resolve, reject) => {
-        this.buildingService.deleteBuilding$(this.formGroup.value.buildingsId)
-        .subscribe(
-          resolve,
-          reject
-        );
+        this.subscription.add(
+          this.buildingService.deleteBuilding$(this.formGroup.value.buildingsId)
+          .subscribe(
+            resolve,
+            reject
+          )
+        )
       }
     )
   }
