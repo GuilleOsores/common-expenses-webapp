@@ -1,12 +1,13 @@
 import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
 import { FormGroup, FormControl, Validators, FormArray } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { Subscription } from 'rxjs';
+import { User, Role } from 'common-expenses-libs/libs';
 
 import { Mode } from '../../utils/utils'
 
-import { User, Role } from 'common-expenses-libs/libs';
 import { UsersService, RolesService } from '../../services'
-import { Subscription } from 'rxjs';
+
 
 @Component({
   selector: 'app-users-detail',
@@ -139,11 +140,13 @@ export class UsersDetailComponent implements OnInit, OnDestroy {
   newUser (): Promise<User> {
     return new Promise(
       (resolve, reject) => {
-        this.usersService.newUser$(this.formGroup.value)
-        .subscribe(
-          resolve,
-          reject
-        );
+        this.subscriptions.add(
+          this.usersService.newUser$(this.formGroup.value)
+          .subscribe(
+            resolve,
+            reject
+          )
+        )
       }
     )
   }
@@ -151,11 +154,13 @@ export class UsersDetailComponent implements OnInit, OnDestroy {
   updateUser (): Promise<User> {
     return new Promise(
       (resolve, reject) => {
-        this.usersService.updateUser$(this.formGroup.value)
-        .subscribe(
-          resolve,
-          reject
-        );
+        this.subscriptions.add(
+          this.usersService.updateUser$(this.formGroup.value)
+          .subscribe(
+            resolve,
+            reject
+          )
+        )
       }
     )
   }
@@ -163,11 +168,13 @@ export class UsersDetailComponent implements OnInit, OnDestroy {
   deleteUser (): Promise<User> {
     return new Promise(
       (resolve, reject) => {
-        this.usersService.deleteUser$(this.formGroup.value.usersId)
-        .subscribe(
-          resolve,
-          reject
-        );
+        this.subscriptions.add(
+          this.usersService.deleteUser$(this.formGroup.value.usersId)
+          .subscribe(
+            resolve,
+            reject
+          )
+        )
       }
     )
   }

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { MatDialogRef } from '@angular/material';
@@ -11,7 +11,7 @@ import { AuthService } from '../../services';
   templateUrl: './auth-create.component.html',
   styleUrls: ['./auth-create.component.scss']
 })
-export class AuthCreateComponent implements OnInit {
+export class AuthCreateComponent implements OnInit, OnDestroy {
 
   private formGroup: FormGroup;
   private subscription: Subscription = new Subscription();
@@ -27,6 +27,10 @@ export class AuthCreateComponent implements OnInit {
       user: new FormControl('', Validators.required),
       password: new FormControl('', Validators.required),
     })
+  }
+
+  ngOnDestroy () {
+    this.subscription.unsubscribe();
   }
 
   onSubmit () {

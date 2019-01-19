@@ -1,7 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
-import { MatTableDataSource } from '@angular/material';
-import { MatDialog } from '@angular/material';
+import { MatTableDataSource, MatDialog } from '@angular/material';
 import { Subscription } from 'rxjs';
 import { Role } from 'common-expenses-libs/libs';
 
@@ -27,8 +25,6 @@ export class RolesComponent implements OnInit, OnDestroy {
     private roleService: RolesService,
     private authService: AuthService,
     private matDialog: MatDialog,
-    private router: Router,
-    private route: ActivatedRoute,
   ) {  }
 
   ngOnInit () {
@@ -48,27 +44,27 @@ export class RolesComponent implements OnInit, OnDestroy {
     .subscribe(
       (roles) => { this.roles = new MatTableDataSource(roles); },
       error => {console.log('error::::');  console.log(error); }
-    )
+    );
     this.subscription.add(subscription);
   }
 
   createRole = () => {
-    const dialogRef = this.matDialog.open(
+    const subscription = this.matDialog.open(
       RoleDetailComponent,
       {
         data: {
           mode: Mode.insert
         }
       }
-    );
-
-    dialogRef.afterClosed().subscribe(
-      this.getRoles
     )
+    .afterClosed().subscribe(
+      this.getRoles
+    );
+    this.subscription.add(subscription);
   }
 
   editRole = (role: Role) => {
-    const dialogRef = this.matDialog.open(
+    const subscription = this.matDialog.open(
       RoleDetailComponent,
       {
         data: {
@@ -76,14 +72,15 @@ export class RolesComponent implements OnInit, OnDestroy {
           role
         }
       }
-    );
-    dialogRef.afterClosed().subscribe(
-      this.getRoles
     )
+    .afterClosed().subscribe(
+      this.getRoles
+    );
+    this.subscription.add(subscription);
   }
 
   deleteRole = (role) => {
-    const dialogRef = this.matDialog.open(
+    const subscription = this.matDialog.open(
       RoleDetailComponent,
       {
         data: {
@@ -91,14 +88,15 @@ export class RolesComponent implements OnInit, OnDestroy {
           role
         }
       }
-    );
-    dialogRef.afterClosed().subscribe(
-      this.getRoles
     )
+    .afterClosed().subscribe(
+      this.getRoles
+    );
+    this.subscription.add(subscription);
   }
 
   viewRole = (role: Role) => {
-    const dialogRef = this.matDialog.open(
+    this.matDialog.open(
       RoleDetailComponent,
       {
         data: {

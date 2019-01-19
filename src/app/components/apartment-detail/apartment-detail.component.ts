@@ -1,10 +1,11 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { Subscription } from 'rxjs';
 
 import { Mode } from '../../utils/utils'
 
-import { Apartment, Building } from '../../classes';
+import { Apartment, Building } from 'common-expenses-libs/libs';
 import { ApartmentsService } from '../../services'
 
 @Component({
@@ -12,15 +13,13 @@ import { ApartmentsService } from '../../services'
   templateUrl: './apartment-detail.component.html',
   styleUrls: ['./apartment-detail.component.css']
 })
-export class ApartmentDetailComponent implements OnInit {
+export class ApartmentDetailComponent implements OnInit, OnDestroy {
 
   private formGroup: FormGroup;
-  //private formControlId: FormControl;
-  //private formControlName: FormControl;
-  //private formControlAddress: FormControl;
   private Mode = Mode;
   private building: Building;
   private apartment: Apartment;
+  private subscription: Subscription = new Subscription();
 
   constructor(
     private apartmentsService: ApartmentsService,
@@ -35,19 +34,12 @@ export class ApartmentDetailComponent implements OnInit {
     this.formGroup = new FormGroup({
       apartmentsId: new FormControl( '' ),
       number: new FormControl( '', Validators.required ),
-      //address: this.formControlAddress = new FormControl( '', Validators.required ),
     });
 
     if( !((<Mode>this.data.mode) === Mode.insert)){
       this.getApartmentById()
       .then( 
         (apartment) => {
-          /*
-          console.log(JSON.stringify(apartment));
-          this.formControlId.setValue(apartment.apartmentsId);
-          //this.formControlName.setValue(building.name);
-          //this.formControlAddress.setValue(building.address);
-          */
           for( const prop in apartment ){
             if( this.formGroup.controls[prop] ){
               this.formGroup.controls[prop].setValue(apartment[prop]);
@@ -58,22 +50,28 @@ export class ApartmentDetailComponent implements OnInit {
     }    
   }
 
+  ngOnDestroy () {
+    this.subscription.unsubscribe();
+  }
+
   getApartmentById = (): Promise<Apartment> => {
     return new Promise(
       (resolve, reject) => {
-        this.apartmentsService.getApartmentById$(this.building.buildingsId, this.apartment.apartmentsId)
-        .subscribe(
-          (apartment) => {
-            if(apartment)
-              resolve(apartment);
-            else
-              reject('Building not found');
-          },
-          error => {
-            console.log(error);
-            reject(error);
-          }
-        );
+        this.subscription.add(
+          this.apartmentsService.getApartmentById$(this.building.buildingsId, this.apartment.apartmentsId)
+          .subscribe(
+            (apartment) => {
+              if(apartment)
+                resolve(apartment);
+              else
+                reject('Building not found');
+            },
+            error => {
+              console.log(error);
+              reject(error);
+            }
+          )
+        )
       }
     )    
   }
@@ -104,11 +102,13 @@ export class ApartmentDetailComponent implements OnInit {
   newApartment (): Promise<Apartment> {
     return new Promise(
       (resolve, reject) => {
-        this.apartmentsService.newApartment$(this.building.buildingsId, this.formGroup.value)
-        .subscribe(
-          resolve,
-          reject
-        );
+        this.subscription.add(
+          this.apartmentsService.newApartment$(this.building.buildingsId, this.formGroup.value)
+          .subscribe(
+            resolve,
+            reject
+          )
+        )
       }
     )
   }
@@ -116,11 +116,13 @@ export class ApartmentDetailComponent implements OnInit {
   updateApartment (): Promise<Apartment> {
     return new Promise(
       (resolve, reject) => {
-        this.apartmentsService.updateApartment$(this.building.buildingsId, this.formGroup.value)
-        .subscribe(
-          resolve,
-          reject
-        );
+        this.subscription.add(
+          this.apartmentsService.updateApartment$(this.building.buildingsId, this.formGroup.value)
+          .subscribe(
+            resolve,
+            reject
+          )
+        )
       }
     )
   }
@@ -128,11 +130,13 @@ export class ApartmentDetailComponent implements OnInit {
   deleteApartment (): Promise<Apartment> {
     return new Promise(
       (resolve, reject) => {
-        this.apartmentsService.deleteApartment$(this.building.buildingsId, this.apartment.apartmentsId)
-        .subscribe(
-          resolve,
-          reject
-        );
+        this.subscription.add(
+          this.apartmentsService.deleteApartment$(this.building.buildingsId, this.apartment.apartmentsId)
+          .subscribe(
+            resolve,
+            reject
+          )
+        )
       }
     )
   }
