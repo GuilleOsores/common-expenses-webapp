@@ -2,8 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material';
 
-import { AuthService } from './services';
-import { LoginComponent } from './components';
+import { AuthService } from './auth/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -27,13 +26,8 @@ export class AppComponent implements OnInit {
 
   checkLogin () {
     if (this.authService.needsLogin()){
-      const dialogRef = this.matDialog.open(LoginComponent);
-
-      dialogRef.afterClosed().subscribe(
-        () => {
-          this.checkLogin();
-        }
-      )
+      console.log('en checkLogin');
+      this.router.navigateByUrl('/login');
     }
   }
 }

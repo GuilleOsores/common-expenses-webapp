@@ -1,44 +1,26 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-
-import {
-    ApartmentsComponent,
-    BuildingsComponent,
-    InvoicesComponent,
-    ServicesComponent,
-    RolesComponent,
-    UsersComponent
-} from './components'
-import { LoginComponent } from './components/login/login.component';
  
 const routes: Routes = [
     {
-        path: 'buildings/:buildingId/apartments',
-        component: ApartmentsComponent
-    },
-    {
-        path: 'buildings/:buildingId/invoices',
-        component: InvoicesComponent,
-    },
-    {
         path: 'buildings',
-        component: BuildingsComponent,
+        loadChildren: './buildings/buildings.module#BuildingsModule',
     },
     {
         path: 'services',
-        component: ServicesComponent,
+        loadChildren: './services/services.module#ServicesModule',
     },
     {
         path: 'roles',
-        component: RolesComponent,
+        loadChildren: './roles/roles.module#RolesModule',
     },
     {
         path: 'users',
-        component: UsersComponent,
+        loadChildren: './users/users.module#UsersModule',
     },
     {
         path: 'login',
-        component: LoginComponent,
+        loadChildren: './auth/auth.module#AuthModule',
     }
 ]
 
