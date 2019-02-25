@@ -14,7 +14,8 @@ export const environment = {
     users: baseUrl + '/users',
     auth: {
       '/': baseUrl + '/auth',
-      authenticate : baseUrl + '/auth/authenticate'
+      authenticate : baseUrl + '/auth/authenticate',
+      authenticate2 : baseUrl + '/auth/authenticate2'
     } 
   }
 };

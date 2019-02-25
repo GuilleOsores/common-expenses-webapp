@@ -1,51 +1,21 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { MaterialModule } from './material.module';
 import { AppRoutingModule } from './app-routing.module';
 
+import { HttpConfigInterceptor } from './interceptor/httpconfig.interceptor';
+
 import { AppComponent } from './app.component';
-import {
-  ApartmentDetailComponent,
-  ApartmentsComponent,
-  BuildingDetailComponent,
-  BuildingsComponent,
-  InvoicesComponent,
-  InvoicesDetailComponent,
-  ServicesComponent,
-  ServicesDetailComponent,
-  RolesComponent,
-  RoleDetailComponent,
-  UsersComponent,
-  UsersDetailComponent,
-  BuildingsListComponent,
-  SidenavComponent,
-} from './components';
-import { LoginComponent } from './components/login/login.component';
-import { AuthCreateComponent } from './components/auth-create/auth-create.component';
+import { SidenavComponent } from './core/sidenav/sidenav.component'
 
 @NgModule({
   declarations: [
     AppComponent,
-    BuildingsComponent,
-    BuildingsListComponent,
-    ApartmentsComponent,
-    BuildingDetailComponent,
     SidenavComponent,
-    ApartmentDetailComponent,
-    InvoicesComponent,
-    InvoicesDetailComponent,
-    ServicesDetailComponent,
-    ServicesComponent,
-    RolesComponent,
-    RoleDetailComponent,
-    UsersComponent,
-    UsersDetailComponent,
-    LoginComponent,
-    AuthCreateComponent,
   ],
   imports: [
     BrowserModule,
@@ -55,15 +25,9 @@ import { AuthCreateComponent } from './components/auth-create/auth-create.compon
     BrowserAnimationsModule,
     AppRoutingModule
   ],
-  providers: [],
+  providers: [
+    { provide: HTTP_INTERCEPTORS, useClass: HttpConfigInterceptor, multi: true }
+  ],
   bootstrap: [AppComponent],
-  entryComponents: [
-    BuildingDetailComponent,
-    ApartmentDetailComponent,
-    ServicesDetailComponent,
-    InvoicesDetailComponent,
-    RoleDetailComponent,
-    UsersDetailComponent
-  ]
 })
 export class AppModule { }
